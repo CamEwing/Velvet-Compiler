@@ -1,0 +1,27 @@
+Part 1:
+Add monospace font - check word for monospace langs 
+	check ansi c text for font guidelines
+
+
+Remove original examples and describe what it actually is remove (integer) entero
+
+add keywords to keywords list (ent/chain/decimal...)
+
+cast - add the result of the operation
+	Think about what to do with mixed mode operations
+		chain + ent =???
+
+Add reference to arithmatic operators
+
+Indicate at the beginning indentations and spaces are important
+
+
+Function - is returning mandatory? how do we signify that? how do we indicate retrun type?
+
+Indentation on branching If/else - is else indented???
+	With tabs? with spaces?
+
+
+
+Part 2:
+Add table
