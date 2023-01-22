@@ -1,0 +1,2 @@
+Ax2: Codes used in your language: .JAVA, runnable JAR , as well scripts (.BAT or .SH)
+and additional files – ex: images, additional files to be used in the assignments.
