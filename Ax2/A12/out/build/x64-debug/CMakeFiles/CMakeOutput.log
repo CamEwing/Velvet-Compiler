@@ -1,4 +1,4 @@
-The system is: Windows - 10.0.22000 - AMD64
+The system is: Windows - 10.0.19045 - AMD64
 Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
 Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/cl.exe 
 Build flags: 
@@ -21,7 +21,7 @@ Compilation of the C compiler identification source "CMakeCCompilerId.c" produce
 
 Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
 
-The C compiler identification is MSVC, found in "C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/CMakeFiles/3.24.202208181-MSVC_2/CompilerIdC/CMakeCCompilerId.exe"
+The C compiler identification is MSVC, found in "C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/CMakeFiles/3.24.202208181-MSVC_2/CompilerIdC/CMakeCCompilerId.exe"
 
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
 Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/cl.exe 
@@ -45,21 +45,21 @@ Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" p
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
 
-The CXX compiler identification is MSVC, found in "C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/CMakeFiles/3.24.202208181-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe"
+The CXX compiler identification is MSVC, found in "C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/CMakeFiles/3.24.202208181-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe"
 
 Detecting C compiler ABI info compiled with the following output:
-Change Dir: C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/CMakeFiles/CMakeTmp
+Change Dir: C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_94fb5 && [1/2] Building C object CMakeFiles\cmTC_94fb5.dir\CMakeCCompilerABI.c.obj
-[2/2] Linking C executable cmTC_94fb5.exe
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_f0e65 && [1/2] Building C object CMakeFiles\cmTC_f0e65.dir\CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_f0e65.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
-Change Dir: C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/CMakeFiles/CMakeTmp
+Change Dir: C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_66a68 && [1/2] Building CXX object CMakeFiles\cmTC_66a68.dir\CMakeCXXCompilerABI.cpp.obj
-[2/2] Linking CXX executable cmTC_66a68.exe
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_474a6 && [1/2] Building CXX object CMakeFiles\cmTC_474a6.dir\CMakeCXXCompilerABI.cpp.obj
+[2/2] Linking CXX executable cmTC_474a6.exe
 
 
 

@@ -311,7 +311,12 @@ julius_intg readerPrint(ReaderPointer const readerPointer) {
 julius_intg readerLoad(ReaderPointer const readerPointer, FILE* const fileDescriptor) {
 	julius_intg size = 0;
 	julius_char c;
-	/* TO_DO: Defensive programming */
+	/* TO_DO: Defensive programming */	
+	if (!readerPointer || !fileDescriptor) {
+		return READER_ERROR;
+	}
+	
+
 	c = (julius_char)fgetc(fileDescriptor);
 	while (!feof(fileDescriptor)) {
 		if (!readerAddChar(readerPointer, c)) {
@@ -342,7 +347,12 @@ julius_intg readerLoad(ReaderPointer const readerPointer, FILE* const fileDescri
 */
 julius_boln readerRecover(ReaderPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer) {
+		return JULIUS_FALSE;
+	}
+
 	/* TO_DO: Recover positions */
+
 	return JULIUS_TRUE;
 }
 

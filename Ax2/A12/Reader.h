@@ -91,9 +91,13 @@ enum READER_MODE {
 #define READER_DEFAULT_INCREMENT	10		/* default increment factor */
 
 /* Add your bit-masks constant definitions here - Defined for BOA */
-/* BITS                                (7654.3210) */
-#define READER_DEFAULT_FLAG 0x00 	/* (0000.0000)_2 = (000)_10 */
-/* TO_DO: BIT 7: FUL = Full */
+/* BITS									(7654.3210) */
+#define READER_DEFAULT_FLAG 0x00 		/* (0000.0000)_2 = (000)_10 */
+/* TO_DO: BIT 7: FUL = Full */ 
+#define SET_FULL_BIT 0x80				/* (1000.0000)_2 = (0x80)_16 = (128) */
+#define RESET_FULL_BIT 0x7F				/* (0111.1111)_2 = (0x7F)_16 = (127) */
+#define CHECK_FULL_BIT SET_FULL_BIT		/* Refer to slides for explanation */
+
 /* TO_DO: BIT 6: EMP: Empty */
 /* TO_DO: BIT 5: REL = Relocation */
 /* TO_DO: BIT 4: END = EndOfBuffer */

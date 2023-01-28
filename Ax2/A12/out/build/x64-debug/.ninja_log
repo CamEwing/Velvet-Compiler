@@ -1,10 +1,11 @@
 # ninja log v5
-12	24	0	clean	8c45b54705a541e8
-9	438	6963641727292620	CMakeFiles/JuliusCompiler.dir/Compilers.c.obj	2a031fb273f82697
-439	914	6963641731835562	JuliusCompiler.exe	2f200432111ab521
-21	429	6963641727257283	CMakeFiles/JuliusCompiler.dir/MainReader.c.obj	44960ebc434d8d0d
-11	436	6963642258106474	CMakeFiles/Velvet.dir/Compilers.c.obj	efd8893892b1dbe4
-15	432	6963641727292620	CMakeFiles/JuliusCompiler.dir/Reader.c.obj	1787ac93e5a01407
-22	415	6963642257805834	CMakeFiles/Velvet.dir/MainReader.c.obj	758b82451ccb1d1d
-17	423	6963642257906385	CMakeFiles/Velvet.dir/Reader.c.obj	9b33107558bb78c1
-437	895	6963642262453274	Velvet.exe	7c8816bccefb7ed0
+17	169	6966417630324188	CMakeFiles/Velvet.dir/Reader.c.obj	f24377630e9ef013
+6	171	6966417630314204	CMakeFiles/Velvet.dir/Compilers.c.obj	baf5dc997d3ed3
+29	208	6966417630744178	CMakeFiles/Velvet.dir/MainReader.c.obj	534056fc030ca4e1
+209	735	6966417635814284	Velvet.exe	7c8816bccefb7ed0
+22	673	6966450419964527	CMakeFiles/Velvet.dir/MainReader.c.obj	534056fc030ca4e1
+6	676	6966450419954545	CMakeFiles/Velvet.dir/Reader.c.obj	f24377630e9ef013
+676	1005	6966450422788165	Velvet.exe	7c8816bccefb7ed0
+8	424	6966468182174803	CMakeFiles/Velvet.dir/Reader.c.obj	f24377630e9ef013
+426	685	6966468184214681	Velvet.exe	7c8816bccefb7ed0
+5	498	6966478096107070	Velvet.exe	7c8816bccefb7ed0

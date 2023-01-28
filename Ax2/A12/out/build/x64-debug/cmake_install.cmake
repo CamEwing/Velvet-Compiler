@@ -1,8 +1,8 @@
-# Install script for directory: C:/School/CST8152/Compilers Project/Ax2/A12
+# Install script for directory: C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/School/CST8152/Compilers Project/Ax2/A12/out/install/x64-debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/install/x64-debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
