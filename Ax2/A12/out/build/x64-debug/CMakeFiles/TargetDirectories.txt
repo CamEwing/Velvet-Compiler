@@ -1,3 +1,3 @@
-C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/CMakeFiles/Velvet.dir
-C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/CMakeFiles/edit_cache.dir
-C:/Algonquin Winter 2023/Compilers/GitHub/CST8152-Compilers/Ax2/A12/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
+C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/CMakeFiles/Velvet.dir
+C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/School/CST8152/Compilers Project/Ax2/A12/out/build/x64-debug/CMakeFiles/rebuild_cache.dir

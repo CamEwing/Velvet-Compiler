@@ -47,7 +47,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -S"C:\Algonquin Winter 2023\Compilers\GitHub\CST8152-Compilers\Ax2\A12" -B"C:\Algonquin Winter 2023\Compilers\GitHub\CST8152-Compilers\Ax2\A12\out\build\x64-debug"
+  command = "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -S"C:\School\CST8152\Compilers Project\Ax2\A12" -B"C:\School\CST8152\Compilers Project\Ax2\A12\out\build\x64-debug"
   description = Re-running CMake...
   generator = 1
 
