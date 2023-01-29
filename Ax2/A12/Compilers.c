@@ -2,7 +2,7 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Winter, 2023
-* Author: TO_DO
+* Author: Megan Clinch 041043369, Cameron Ewing 041037946
 * Professors: Paulo Sousa
 ************************************************************
 
@@ -55,16 +55,6 @@
 #endif
 
 /*
- * ............................................................................
- * ADVICE 1:
- * Please check the "TODO" labels to develop your activity.
- *
- * ADVICE 2: This file must be updated according to each assignment
- * (see the progression: reader > scanner > parser).
- * ............................................................................
- */
-
-/*
 ***********************************************************
 * Function name: main
 * Purpose: Main function
@@ -77,9 +67,9 @@
 *************************************************************
 */
 
-julius_intg main(int argc, char** argv) {
-	julius_intg i;
-	julius_char option;
+entero main(entero argc, char** argv) {
+	entero i;
+	char option;
 	printLogo();
 	if (DEBUG) {
 		for (i = 0; i < argc; ++i)
@@ -130,7 +120,7 @@ julius_intg main(int argc, char** argv) {
 * Algorithm: -
 *************************************************************
 */
-julius_void printLogo() {
+void printLogo() {
 	printf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
 		"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n",
 		"@@@@                                                               @@@@\n",

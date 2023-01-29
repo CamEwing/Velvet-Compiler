@@ -2,7 +2,7 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Winter, 2023
-* Author: TO_DO
+* Author: Megan Clinch 041043369, Cameron Ewing 041037946
 * Professors: Paulo Sousa
 ************************************************************
 
@@ -50,20 +50,10 @@
 #define COMPILERS_H_
 
 #define DEBUG 0
-
-/*
- * ............................................................................
- * ADVICE 1:
- * Please check the "TODO" labels to develop your activity.
- *
- * ADVICE 2: This file must be updated according to each assignment
- * (see the progression: reader > scanner > parser).
- * ............................................................................
- */
  
 /* Logical constants - adapt for your language */
-#define JULIUS_TRUE  1
-#define JULIUS_FALSE 0
+#define TRUE  1
+#define FALSE 0
 
 /*
 ------------------------------------------------------------
@@ -73,17 +63,13 @@ NOTE: Some types may not be directly used by your language,
 ------------------------------------------------------------
 */
 
-/* TO_DO: Define your typedefs */
-typedef void			julius_void;
-typedef char			julius_char;
-typedef int				julius_intg;
-typedef float			julius_real;
+/* Defining typedefs */
+typedef char			chain[];	// String
+typedef int				entero;		// Integer
+typedef float			decimal;	// Floating point
 
-typedef unsigned char	julius_boln;
-typedef unsigned char	julius_byte;
-
-typedef long			julius_long;
-typedef double			julius_doub;
+typedef unsigned char	boolean;
+typedef unsigned char	byte;
 
 /*
 ------------------------------------------------------------
@@ -105,11 +91,11 @@ Main functions signatures
 (Code will be updated during next assignments)
 ------------------------------------------------------------
 */
-julius_intg mainReader(julius_intg argc, julius_char** argv);
+entero mainReader(entero argc, char** argv);
 /*
-julius_intg mainScanner(julius_intg argc, julius_char** argv);
-julius_intg mainParser(julius_intg argc, julius_char** argv);
+entero mainScanner(entero argc, char** argv);
+entero mainParser(entero argc, char** argv);
 */
-julius_void printLogo();
+void printLogo();
 
 #endif

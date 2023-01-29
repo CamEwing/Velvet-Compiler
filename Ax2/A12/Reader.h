@@ -2,7 +2,7 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Winter, 2023
-* Author: TO_DO
+* Author: Megan Clinch 041043369, Cameron Ewing 041037946
 * Professors: Paulo Sousa
 ************************************************************
 
@@ -46,13 +46,6 @@
 ************************************************************
 */
 
-/*
- *.............................................................................
- * MAIN ADVICE:
- * Please check the "TODO" labels to develop your activity.
- *.............................................................................
- */
-
 #ifndef COMPILERS_H_
 #include "Compilers.h"
 #endif
@@ -92,15 +85,27 @@ enum READER_MODE {
 
 /* Add your bit-masks constant definitions here - Defined for BOA */
 /* BITS									(7654.3210) */
-#define READER_DEFAULT_FLAG 0x00 		/* (0000.0000)_2 = (000)_10 */
-/* TO_DO: BIT 7: FUL = Full */ 
-#define SET_FULL_BIT 0x80				/* (1000.0000)_2 = (0x80)_16 = (128) */
-#define RESET_FULL_BIT 0x7F				/* (0111.1111)_2 = (0x7F)_16 = (127) */
-#define CHECK_FULL_BIT SET_FULL_BIT		/* Refer to slides for explanation */
+#define READER_DEFAULT_FLAG 0x00 		/* (0000 0000)_2 = (000)_10 */
 
-/* TO_DO: BIT 6: EMP: Empty */
-/* TO_DO: BIT 5: REL = Relocation */
-/* TO_DO: BIT 4: END = EndOfBuffer */
+/* BIT 7: FUL = Full */ 
+#define SET_FUL_BIT 0x80				/* (1000 0000)_2 = (0x80)_16 = (128) */
+#define RESET_FUL_BIT 0x7F				/* (0111 1111)_2 = (0x7F)_16 = (127) */
+#define CHECK_FUL_BIT SET_FUL_BIT		/* Refer to slides for explanation */
+
+/* BIT 6: EMP: Empty */
+#define SET_EMP_BIT 0x40				/* (0100 0000)_2 = (0x40)_16 = (64) */
+#define RESET_EMP_BIT 0xBF				/* (1011 1111)_2 = (0xBF)_16 = (191) */
+#define CHECK_EMP_BIT SET_EMP_BIT		/* Refer to slides for explanation */
+
+/* BIT 5: REL = Relocation */
+#define SET_REL_BIT 0x20				/* (0010 0000)_2 = (0x20)_16 = (32) */
+#define RESET_REL_BIT 0xDF				/* (1101 1111)_2 = (0xDF)_16 = (223) */
+#define CHECK_REL_BIT SET_REL_BIT		/* Refer to slides for explanation */
+
+/* BIT 4: END = EndOfBuffer */
+#define SET_END_BIT 0x10				/* (0001 0000)_2 = (0x10)_16 = (16) */
+#define RESET_END_BIT 0xEF				/* (1110 1111)_2 = (0xEF)_16 = (239) */
+#define CHECK_END_BIT SET_END_BIT		/* Refer to slides for explanation */
 
 #define NCHAR				128			/* Chars from 0 to 127 */
 
@@ -110,48 +115,48 @@ enum READER_MODE {
 
 /* Offset declaration */
 typedef struct position {
-	julius_intg mark;			/* the offset to the mark position (in chars) */
-	julius_intg read;			/* the offset to the get a char position (in chars) */
-	julius_intg wrte;			/* the offset to the add chars (in chars) */
+	entero mark;			/* the offset to the mark position (in chars) */
+	entero read;			/* the offset to the get a char position (in chars) */
+	entero wrte;			/* the offset to the add chars (in chars) */
 } Position;
 
 /* Buffer structure */
 typedef struct bufferReader {
-	julius_char*	content;			/* pointer to the beginning of character array (character buffer) */
-	julius_intg		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
-	julius_intg		increment;			/* character array increment factor */
-	julius_intg		mode;				/* operational mode indicator */
-	julius_byte		flags;				/* contains character array reallocation flag and end-of-buffer flag */
+	char*			content;			/* pointer to the beginning of character array (character buffer) */
+	entero			size;				/* current dynamic memory size (in bytes) allocated to character buffer */
+	entero			increment;			/* character array increment factor */
+	entero			mode;				/* operational mode indicator */
+	byte			flags;				/* contains character array reallocation flag and end-of-buffer flag */
 	Position		position;			/* Offset / position field */
-	julius_intg		histogram[NCHAR];	/* Statistics of chars */
-	julius_intg		numReaderErrors;	/* Number of errors from Reader */
+	entero			histogram[NCHAR];	/* Statistics of chars */
+	entero			numReaderErrors;	/* Number of errors from Reader */
 } BufferReader, * ReaderPointer;
 
 /* FUNCTIONS DECLARATION:  .................................. */
 /* General Operations */
-ReaderPointer	readerCreate		(julius_intg, julius_intg, julius_intg);
-ReaderPointer	readerAddChar		(ReaderPointer const, julius_char);
-julius_boln		readerClear		    (ReaderPointer const);
-julius_boln		readerFree		    (ReaderPointer const);
-julius_boln		readerIsFull		(ReaderPointer const);
-julius_boln		readerIsEmpty		(ReaderPointer const);
-julius_boln		readerSetMark		(ReaderPointer const, julius_intg);
-julius_intg		readerPrint		    (ReaderPointer const);
-julius_intg		readerLoad			(ReaderPointer const, FILE* const);
-julius_boln		readerRecover		(ReaderPointer const);
-julius_boln		readerRetract		(ReaderPointer const);
-julius_boln		readerRestore		(ReaderPointer const);
+ReaderPointer	readerCreate		(entero, entero, entero);
+ReaderPointer	readerAddChar		(ReaderPointer const, char);
+boolean			readerClear		    (ReaderPointer const);
+boolean			readerFree		    (ReaderPointer const);
+boolean			readerIsFull		(ReaderPointer const);
+boolean			readerIsEmpty		(ReaderPointer const);
+boolean			readerSetMark		(ReaderPointer const, entero);
+entero			readerPrint		    (ReaderPointer const);
+entero			readerLoad			(ReaderPointer const, FILE* const);
+boolean			readerRecover		(ReaderPointer const);
+boolean			readerRetract		(ReaderPointer const);
+boolean			readerRestore		(ReaderPointer const);
 /* Getters */
-julius_char		readerGetChar		(ReaderPointer const);
-julius_char*	readerGetContent	(ReaderPointer const, julius_intg);
-julius_intg		readerGetPosRead	(ReaderPointer const);
-julius_intg		readerGetPosWrte	(ReaderPointer const);
-julius_intg		readerGetPosMark	(ReaderPointer const);
-julius_intg		readerGetSize		(ReaderPointer const);
-julius_intg		readerGetInc		(ReaderPointer const);
-julius_intg		readerGetMode		(ReaderPointer const);
-julius_byte		readerGetFlags		(ReaderPointer const);
-julius_intg		readerShowStat		(ReaderPointer const);
-julius_intg		readerNumErrors		(ReaderPointer const);
+char			readerGetChar		(ReaderPointer const);
+char*			readerGetContent	(ReaderPointer const, entero);
+entero			readerGetPosRead	(ReaderPointer const);
+entero			readerGetPosWrte	(ReaderPointer const);
+entero			readerGetPosMark	(ReaderPointer const);
+entero			readerGetSize		(ReaderPointer const);
+entero			readerGetInc		(ReaderPointer const);
+entero			readerGetMode		(ReaderPointer const);
+byte			readerGetFlags		(ReaderPointer const);
+entero			readerShowStat		(ReaderPointer const);
+entero			readerNumErrors		(ReaderPointer const);
 
 #endif
