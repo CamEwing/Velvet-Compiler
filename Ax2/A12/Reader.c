@@ -79,6 +79,9 @@
 ReaderPointer readerCreate(entero size, entero increment, entero mode) {
 	ReaderPointer readerPointer;
 	/* Defensive programming */
+	if (!size || !increment || !mode) {
+		return NULL;
+	}
 	/* Adjust the values according to parameters */
 	if (size == 0) {
 		size = READER_DEFAULT_SIZE;
@@ -88,28 +91,33 @@ ReaderPointer readerCreate(entero size, entero increment, entero mode) {
 	if (increment == 0) {
 		mode = MODE_FIXED;
 	}
-	
-	if (mode != MODE_FIXED || mode != MODE_ADDIT || mode != MODE_MULTI) {
+
+	if ((mode != MODE_FIXED) && (mode != MODE_ADDIT) && (mode != MODE_MULTI)) {
 		return NULL;
 	}
 
 	readerPointer = (ReaderPointer)calloc(1, sizeof(BufferReader));
 	/* Defensive programming */
-	if (!readerPointer)
+	if (!readerPointer) {
 		return NULL;
+	}
 	readerPointer->content = (char*)malloc(size);
 	/* Defensive programming */
+	if (!readerPointer->content) {
+		return NULL;
+	}
 	/* TO_DO: Initialize the histogram ????? */
+	//readerPointer->histogram = readerPointer->histogram[NCHAR];
+
 	readerPointer->size = size;
 	readerPointer->increment = increment;
 	readerPointer->mode = mode;
-	/* TO_DO: Initialize flags ????? */
-	byte flag = SET_EMP_BIT;
-	readerPointer->flags = flag;
 
+	/* TO_DO: Initialize flags ????? */
 	readerPointer->flags = READER_DEFAULT_FLAG;
 
 	/* TO_DO: The created flag must be signalized as EMP ????? */
+	readerPointer->flags = SET_EMP_BIT;
 	return readerPointer;
 }
 
@@ -133,22 +141,44 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 	char* tempReader = NULL;
 	entero newSize = 0;
 	/* TO_DO: Defensive programming: check buffer and valid char (increment numReaderErrors) */
-	/* TO_DO: Reset Realocation */
+	if ((!readerPointer) || (!ch)) {
+		readerPointer->numReaderErrors++;
+		return NULL;
+	}
+	
+	/* TO_DO: Reset Realocation  ?????*/
+	readerPointer = (char*)realloc(1, sizeof(BufferReader));
+
 	/* TO_DO: Test the inclusion of chars */
+
+
 	if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
 		/* TO_DO: This buffer is NOT full */
+		readerPointer->position.wrte++;
+
 	} else {
 		/* TO_DO: Reset Full flag */
+		readerPointer->flags = RESET_FUL_BIT;
 		switch (readerPointer->mode) {
 		case MODE_FIXED:
 			return NULL;
 		case MODE_ADDIT:
 			/* TO_DO: Adjust new size */
+			newSize = readerPointer->size + readerPointer->increment;
 			/* TO_DO: Defensive programming */
+			if (!newSize) {
+				readerPointer->numReaderErrors++;
+				return NULL;
+			}
 			break;
 		case MODE_MULTI:
 			/* TO_DO: Adjust new size */
+			newSize = readerPointer->size * readerPointer->increment;
 			/* TO_DO: Defensive programming */
+			if (!newSize) {
+				readerPointer->numReaderErrors++;
+				return NULL;
+			}
 			break;
 		default:
 			return NULL;
