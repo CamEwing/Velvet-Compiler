@@ -1,0 +1,9 @@
+NOTES A12
+~Defensive programming - sys.error or p.error: shows why you have an incorrect result - before proceeding sanity check code so we do not leave the vicinity where the problem occurred (perform NULL and other sanity checks)
+readAddChar()
+~Reset - update reader pointer flags by using the bitmask RESET
+~Buffer is full - check the reset flag
+~do reallocation, temp variable, new reader pointer content 
+~Test inclusion of chars = checks to see if the wrt position is 
+~buffer is not dull - reader reset ful —— 
+NOTE!!!!!!!!! BITMASKING: & AND Reset / | OR Set

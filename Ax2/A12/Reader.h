@@ -97,7 +97,7 @@ enum READER_MODE {
 #define RESET_EMP_BIT 0xBF				/* (1011 1111)_2 = (0xBF)_16 = (191) */
 #define CHECK_EMP_BIT SET_EMP_BIT		/* Refer to slides for explanation */
 
-/* BIT 5: REL = Relocation */
+/* BIT 5: REL = Realocation */
 #define SET_REL_BIT 0x20				/* (0010 0000)_2 = (0x20)_16 = (32) */
 #define RESET_REL_BIT 0xDF				/* (1101 1111)_2 = (0xDF)_16 = (223) */
 #define CHECK_REL_BIT SET_REL_BIT		/* Refer to slides for explanation */

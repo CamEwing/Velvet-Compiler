@@ -106,18 +106,20 @@ ReaderPointer readerCreate(entero size, entero increment, entero mode) {
 	if (!readerPointer->content) {
 		return NULL;
 	}
-	/* TO_DO: Initialize the histogram ????? */
-	//readerPointer->histogram = readerPointer->histogram[NCHAR];
-
+	/* Initialize the histogram */
+	//Making a loop to initialize the array
+	for (int i = 0; i < NCHAR; i++) {
+		readerPointer->histogram[i] = 0;
+	}
 	readerPointer->size = size;
 	readerPointer->increment = increment;
 	readerPointer->mode = mode;
 
-	/* TO_DO: Initialize flags ????? */
+	/* Initialize flags */
 	readerPointer->flags = READER_DEFAULT_FLAG;
 
-	/* TO_DO: The created flag must be signalized as EMP ????? */
-	readerPointer->flags = SET_EMP_BIT;
+	/* The created flag must be signalized as EMP */
+	readerPointer->flags |= SET_EMP_BIT;
 	return readerPointer;
 }
 
@@ -141,24 +143,29 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 	char* tempReader = NULL;
 	entero newSize = 0;
 	/* TO_DO: Defensive programming: check buffer and valid char (increment numReaderErrors) */
-	if ((!readerPointer) || (!ch)) {
+	if (!readerPointer) {
+		return NULL;
+	}
+	if (ch > 128 && ch < 0) {
 		readerPointer->numReaderErrors++;
 		return NULL;
 	}
 	
-	/* TO_DO: Reset Realocation  ?????*/
-	readerPointer = (char*)realloc(1, sizeof(BufferReader));
+	/* TO_DO: Reset REL  ?????*/
+	readerPointer->flags &= RESET_REL_BIT;
+		
 
 	/* TO_DO: Test the inclusion of chars */
-
+	
 
 	if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
 		/* TO_DO: This buffer is NOT full */
-		readerPointer->position.wrte++;
+		//????
+		readerPointer->flags &= RESET_FUL_BIT;
 
 	} else {
-		/* TO_DO: Reset Full flag */
-		readerPointer->flags = RESET_FUL_BIT;
+		/* TO_DO: Reset Full flag */ //Set full mask
+		readerPointer->flags |= SET_FUL_BIT;
 		switch (readerPointer->mode) {
 		case MODE_FIXED:
 			return NULL;
@@ -183,13 +190,20 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 		default:
 			return NULL;
 		}
-		/* TO_DO: New reader allocation */
+		/* TO_DO: New Reader Allocation */ //newSize reader allocation to tempReader
+		tempReader = (char*)malloc(newSize);
 		/* TO_DO: Defensive programming */
-		/* TO_DO: Check Relocation */
+		if (!tempReader) {
+			return NULL;
+		}
+
+		/* TO_DO: Check Realocation */
+		readerPointer->content = (char*)realloc(1, sizeof(readerPointer->content) + sizeof(tempReader)); //or sizeof(tempReader)
 	}
 	/* TO_DO: Add the char */
 	readerPointer->content[readerPointer->position.wrte++] = ch;
 	/* TO_DO: Updates histogram */
+	readerPointer->histogram[(int)ch]++;
 	return readerPointer;
 }
 
