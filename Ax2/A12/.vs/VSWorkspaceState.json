@@ -13,8 +13,8 @@
   },
   "ExpandedNodes": [
     "",
-    "\\out\\build"
+    "\\out"
   ],
-  "SelectedNode": "\\Compilers.c",
+  "SelectedNode": "\\MainReader.c",
   "PreviewInSolutionExplorer": false
 }

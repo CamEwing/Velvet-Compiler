@@ -146,9 +146,9 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 	if (!readerPointer) {
 		return NULL;
 	}
-	if (ch > 128 && ch < 0) {
+	if (ch > NCHAR && ch < 0) {
 		readerPointer->numReaderErrors++;
-		return NULL;
+		return readerPointer;
 	}
 	
 	/* TO_DO: Reset REL  ?????*/
@@ -198,10 +198,10 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 		}
 
 		/* TO_DO: Check Realocation */
-		readerPointer->content = (char*)realloc(1, sizeof(readerPointer->content) + sizeof(tempReader)); //or sizeof(tempReader)
+		//readerPointer->content = (char*)realloc(1, sizeof(readerPointer->content) + sizeof(tempReader)); //or sizeof(tempReader)
 	}
 	/* TO_DO: Add the char */
-	readerPointer->content[readerPointer->position.wrte++] = ch;
+	//readerPointer->content[readerPointer->position.wrte++] = ch;
 	/* TO_DO: Updates histogram */
 	readerPointer->histogram[(int)ch]++;
 	return readerPointer;
@@ -370,10 +370,13 @@ entero readerLoad(ReaderPointer const readerPointer, FILE* const fileDescriptor)
 
 	c = (char)fgetc(fileDescriptor);
 	while (!feof(fileDescriptor)) {
-		if (!readerAddChar(readerPointer, c)) {
+		/*if (!readerAddChar(readerPointer, c)) {			//He commented this in lecture
 			ungetc(c, fileDescriptor);
 			return READER_ERROR;
-		}
+		}*/
+		readerAddChar(readerPointer, c)						//And Added this
+
+
 		c = (char)fgetc(fileDescriptor);
 		size++;
 	}
@@ -676,6 +679,9 @@ entero readerShowStat(ReaderPointer const readerPointer) {
 */
 entero readerNumErrors(ReaderPointer const readerPointer) {
 	/* TO_DO: Defensive programming */
+	if (!readerPointer) {
+		return READER_ERROR;
+	}
 	/* TO_DO: Updates the histogram */
 	return 0;
 }
