@@ -79,13 +79,6 @@
 ReaderPointer readerCreate(entero size, entero increment, entero mode) {
 	ReaderPointer readerPointer;
 	/* Defensive programming */
-	//if (!size || !increment || !mode) {
-	//	return NULL;
-	//}
-	if (size || increment) {
-		return NULL;
-	}
-
 	/* Adjust the values according to parameters */
 	if (size == 0) {
 		size = READER_DEFAULT_SIZE;
@@ -150,59 +143,58 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 	if (!readerPointer) {
 		return NULL;
 	}
-	if (ch > NCHAR && ch < 0) {
-		readerPointer->numReaderErrors++;
-		return readerPointer;
-	}
-	
-	/* Reset REL */
-	readerPointer->flags &= RESET_REL_BIT;
-		
-	/* Test the inclusion of chars */
-	if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
-		/* This buffer is NOT full */
-		readerPointer->flags &= RESET_FUL_BIT;
-	} else {
-		/* Re-set Full flag */ 
-		readerPointer->flags |= SET_FUL_BIT;
-		switch (readerPointer->mode) {
-		case MODE_FIXED:
-			return NULL;
-		case MODE_ADDIT:
-			/* Adjust new size */
-			newSize = readerPointer->size + readerPointer->increment;
-			/* Defensive programming */
-			if (!newSize) {
-				readerPointer->numReaderErrors++;
-				return NULL;
-			}
-			break;
-		case MODE_MULTI:
-			/*  Adjust new size */
-			newSize = readerPointer->size * readerPointer->increment;
-			/* Defensive programming */
-			if (!newSize) {
-				readerPointer->numReaderErrors++;
-				return NULL;
-			}
-			break;
-		default:
-			return NULL;
-		}
-		/* TO_DO: New Reader Allocation */ //newSize reader allocation to tempReader
-		tempReader = (char*)malloc(newSize);
-		/* TO_DO: Defensive programming */
-		if (!tempReader) {
-			return NULL;
+		if (ch > NCHAR && ch < 0) {
+			readerPointer->numReaderErrors++;
+			return readerPointer;
 		}
 
-		/* TO_DO: Check Realocation */
-		readerPointer->content = (char*)realloc(1, sizeof(readerPointer->content) + sizeof(tempReader)); //or sizeof(tempReader)
-	}
-	/* Add the char */
-	readerPointer->content[readerPointer->position.wrte++] = ch;
-	/* Updates histogram */
-	readerPointer->histogram[(int)ch]++;
+		/* Reset REL */
+		readerPointer->flags &= RESET_REL_BIT;
+
+		/* Test the inclusion of chars */
+		if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
+			/* This buffer is NOT full */
+			readerPointer->flags &= RESET_FUL_BIT;
+		}
+		else {
+			/* Re-set Full flag */
+			readerPointer->flags |= SET_FUL_BIT;
+			switch (readerPointer->mode) {
+			case MODE_FIXED:
+				return NULL;
+			case MODE_ADDIT:
+				/* Adjust new size */
+				newSize = readerPointer->size + readerPointer->increment;
+				/* Defensive programming */
+				if (!newSize) {
+					readerPointer->numReaderErrors++;
+					return NULL;
+				}
+				break;
+			case MODE_MULTI:
+				/*  Adjust new size */
+				newSize = readerPointer->size * readerPointer->increment;
+				/* Defensive programming */
+				if (!newSize) {
+					readerPointer->numReaderErrors++;
+					return NULL;
+				}
+				break;
+			default:
+				return NULL;
+			}
+			/* TO_DO: New Reader Allocation */ //newSize reader allocation to tempReader
+			/* TO_DO: Check Realocation */
+			tempReader = (char*)realloc(readerPointer->content, sizeof(newSize)); //or sizeof(tempReader)
+			if (!tempReader)
+				return NULL;
+			readerPointer->content = tempReader;
+			readerPointer->size = newSize;
+		}
+		/* Add the char */
+		readerPointer->content[readerPointer->position.wrte++] = ch;
+		/* Updates histogram */
+		readerPointer->histogram[(int)ch]++;
 	return readerPointer;
 }
 
@@ -223,7 +215,7 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 boolean readerClear(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return FALSE;
 	}
 	/* Adjust flags original */
 	readerPointer->flags &= READER_DEFAULT_FLAG;	//Resetting flags to 0x00
@@ -356,13 +348,13 @@ entero readerPrint(ReaderPointer const readerPointer) {
 	char c;
 	/* Defensive programming (including invalid chars) */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
 
 	c = readerGetChar(readerPointer);
 	if (c > NCHAR && c < 0) {
 		readerPointer->numReaderErrors++;
-		return readerPointer;
+		return READER_ERROR;
 	}
 
 	/* Check flag if buffer EOB has achieved */
@@ -415,7 +407,7 @@ entero readerLoad(ReaderPointer const readerPointer, FILE* const fileDescriptor)
 	}
 	/* Defensive programming */
 	if (size > READER_MAX_SIZE) {
-		return NULL;
+		return READER_ERROR;
 	}
 	return size;
 }
@@ -522,7 +514,7 @@ boolean readerRestore(ReaderPointer const readerPointer) {
 char readerGetChar(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_TERMINATOR;
 	}
 	/* Check condition to read/wrte */
 	if (readerPointer->position.read == readerPointer->position.wrte) {
@@ -587,7 +579,7 @@ char* readerGetContent(ReaderPointer const readerPointer, entero pos) {
 entero readerGetPosRead(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
 	/* Return read */
 	return readerPointer->position.read;
@@ -611,7 +603,7 @@ entero readerGetPosRead(ReaderPointer const readerPointer) {
 entero readerGetPosWrte(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
 	/* Return wrte */
 	return readerPointer->position.wrte;
@@ -635,7 +627,7 @@ entero readerGetPosWrte(ReaderPointer const readerPointer) {
 entero readerGetPosMark(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
 	/* Return mark */
 	return readerPointer->position.mark;
@@ -659,7 +651,7 @@ entero readerGetPosMark(ReaderPointer const readerPointer) {
 entero readerGetSize(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
 	/* Return size */
 	return readerPointer->size;
@@ -682,7 +674,7 @@ entero readerGetSize(ReaderPointer const readerPointer) {
 entero readerGetInc(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
 	/* Return increment */
 	return readerPointer->increment;
@@ -705,7 +697,7 @@ entero readerGetInc(ReaderPointer const readerPointer) {
 entero readerGetMode(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
 	/* Return mode */
 	return readerPointer->mode;
@@ -729,7 +721,7 @@ entero readerGetMode(ReaderPointer const readerPointer) {
 byte readerGetFlags(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_DEFAULT_FLAG;
 	}
 	/* Return flags */
 	return readerPointer->flags;
@@ -752,10 +744,15 @@ byte readerGetFlags(ReaderPointer const readerPointer) {
 entero readerShowStat(ReaderPointer const readerPointer) {
 	/* Defensive programming */
 	if (!readerPointer) {
-		return NULL;
+		return READER_ERROR;
 	}
+	int counter = 0;
 	/* Updates the histogram */
-	return readerPointer->histogram;
+	for (int i = 0; i < NCHAR; i++) {
+		if (readerPointer->histogram[i] > 0)
+			counter++;
+	}
+	return counter;
 }
 
 /*
