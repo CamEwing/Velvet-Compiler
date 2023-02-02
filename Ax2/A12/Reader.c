@@ -79,9 +79,13 @@
 ReaderPointer readerCreate(entero size, entero increment, entero mode) {
 	ReaderPointer readerPointer;
 	/* Defensive programming */
-	if (!size || !increment || !mode) {
+	//if (!size || !increment || !mode) {
+	//	return NULL;
+	//}
+	if (size || increment) {
 		return NULL;
 	}
+
 	/* Adjust the values according to parameters */
 	if (size == 0) {
 		size = READER_DEFAULT_SIZE;
@@ -151,13 +155,12 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 		return readerPointer;
 	}
 	
-	/* Reset REL  ?????*/
+	/* Reset REL */
 	readerPointer->flags &= RESET_REL_BIT;
 		
 	/* Test the inclusion of chars */
 	if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
 		/* This buffer is NOT full */
-		//????
 		readerPointer->flags &= RESET_FUL_BIT;
 	} else {
 		/* Re-set Full flag */ 
