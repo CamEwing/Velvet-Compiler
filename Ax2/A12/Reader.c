@@ -155,6 +155,7 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 		if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
 			/* This buffer is NOT full */
 			readerPointer->flags &= RESET_FUL_BIT;
+			readerPointer->flags &= RESET_EMP_BIT;
 		}
 		else {
 			/* Re-set Full flag */
@@ -185,7 +186,8 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 			}
 			/* TO_DO: New Reader Allocation */ //newSize reader allocation to tempReader
 			/* TO_DO: Check Realocation */
-			tempReader = (char*)realloc(readerPointer->content, sizeof(newSize)); //or sizeof(tempReader)
+		//	tempReader = (char*)realloc(readerPointer->content, sizeof(newSize)); //or sizeof(tempReader)
+			tempReader = (char*)realloc(readerPointer->content, sizeof(char)*newSize); //or sizeof(tempReader)
 			if (!tempReader)
 				return NULL;
 			readerPointer->content = tempReader;
@@ -654,7 +656,7 @@ entero readerGetSize(ReaderPointer const readerPointer) {
 		return READER_ERROR;
 	}
 	/* Return size */
-	return readerPointer->size;
+	return readerPointer->size/8;
 }
 
 /*

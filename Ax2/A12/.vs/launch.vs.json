@@ -9,10 +9,7 @@
       "name": "Velvet.exe",
       "args": [
         "R",
-        "Big.vlt",
-        "A",
-        500,
-        100
+        "README.txt"
       ]
     }
   ]
