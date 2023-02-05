@@ -143,60 +143,62 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 	if (!readerPointer) {
 		return NULL;
 	}
-		if (ch > NCHAR && ch < 0) {
-			readerPointer->numReaderErrors++;
-			return readerPointer;
-		}
+	if (ch > NCHAR && ch < 0) {
+		readerPointer->numReaderErrors++;
+		return readerPointer;
+	}
 
-		/* Reset REL */
-		readerPointer->flags &= RESET_REL_BIT;
+	/* Reset REL */
+	readerPointer->flags &= RESET_REL_BIT;
 
-		/* Test the inclusion of chars */
-		if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
-			/* This buffer is NOT full */
-			readerPointer->flags &= RESET_FUL_BIT;
-			readerPointer->flags &= RESET_EMP_BIT;
-		}
-		else {
-			/* Re-set Full flag */
-			readerPointer->flags |= SET_FUL_BIT;
-			switch (readerPointer->mode) {
-			case MODE_FIXED:
-				return NULL;
-			case MODE_ADDIT:
-				/* Adjust new size */
-				newSize = readerPointer->size + readerPointer->increment;
-				/* Defensive programming */
-				if (!newSize) {
-					readerPointer->numReaderErrors++;
-					return NULL;
-				}
-				break;
-			case MODE_MULTI:
-				/*  Adjust new size */
-				newSize = readerPointer->size * readerPointer->increment;
-				/* Defensive programming */
-				if (!newSize) {
-					readerPointer->numReaderErrors++;
-					return NULL;
-				}
-				break;
-			default:
+	/* Test the inclusion of chars */
+	if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
+		/* This buffer is NOT full */
+		readerPointer->flags &= RESET_FUL_BIT;
+		readerPointer->flags &= RESET_EMP_BIT;
+	}
+	else {
+		/* Re-set Full flag */
+		readerPointer->flags |= SET_FUL_BIT;
+		switch (readerPointer->mode) {
+		case MODE_FIXED:
+			return NULL;
+		case MODE_ADDIT:
+			/* Adjust new size */
+			newSize = readerPointer->size + readerPointer->increment;
+			/* Defensive programming */
+			if (!newSize) {
+				readerPointer->numReaderErrors++;
 				return NULL;
 			}
-			/* TO_DO: New Reader Allocation */ //newSize reader allocation to tempReader
-			/* TO_DO: Check Realocation */
-		//	tempReader = (char*)realloc(readerPointer->content, sizeof(newSize)); //or sizeof(tempReader)
-			tempReader = (char*)realloc(readerPointer->content, sizeof(char)*newSize); //or sizeof(tempReader)
-			if (!tempReader)
+			break;
+		case MODE_MULTI:
+			/*  Adjust new size */
+			newSize = readerPointer->size * readerPointer->increment;
+			/* Defensive programming */
+			if (!newSize) {
+				readerPointer->numReaderErrors++;
 				return NULL;
-			readerPointer->content = tempReader;
-			readerPointer->size = newSize;
+			}
+			break;
+		default:
+			return NULL;
 		}
-		/* Add the char */
-		readerPointer->content[readerPointer->position.wrte++] = ch;
-		/* Updates histogram */
-		readerPointer->histogram[(int)ch]++;
+		/* TO_DO: New Reader Allocation */ //newSize reader allocation to tempReader
+		/* TO_DO: Check Realocation */
+	//	tempReader = (char*)realloc(readerPointer->content, sizeof(newSize)); //or sizeof(tempReader)
+		tempReader = (char*)realloc(readerPointer->content, sizeof(char)*newSize); //or sizeof(tempReader)
+		if (!tempReader) {
+			return NULL;
+		}
+		readerPointer->content = tempReader;
+		readerPointer->size = newSize;
+	}
+	/* Add the char */
+	readerPointer->content[readerPointer->position.wrte++] = ch;
+	/* Updates histogram */
+	readerPointer->histogram[(int)ch]++;
+
 	return readerPointer;
 }
 
@@ -354,7 +356,7 @@ entero readerPrint(ReaderPointer const readerPointer) {
 	}
 
 	c = readerGetChar(readerPointer);
-	if (c > NCHAR && c < 0) {
+	if (c > NCHAR || c < 0) {
 		readerPointer->numReaderErrors++;
 		return READER_ERROR;
 	}
@@ -366,7 +368,7 @@ entero readerPrint(ReaderPointer const readerPointer) {
 		c = readerGetChar(readerPointer);
 		byte test = readerPointer->flags & CHECK_END_BIT;
 		if (test == CHECK_END_BIT) {
-			return cont;
+			return cont;									//FUNKY Return cont???
 		}
 	}
 	return cont;
@@ -553,13 +555,13 @@ char* readerGetContent(ReaderPointer const readerPointer, entero pos) {
 		return NULL;
 	}
 
-	if (pos < 0 && pos > readerPointer->position.wrte) {
+	if (pos < 0 || pos > readerPointer->position.wrte) {			//FUNKY IS IT AN AND OR OR??
 		return NULL;
 	}
 
 	/* Return content (string) */
 	return readerPointer->content + pos;
-
+	// return &(readerPointer->content[pos]);???????? maybe
 }
 
 
@@ -656,7 +658,7 @@ entero readerGetSize(ReaderPointer const readerPointer) {
 		return READER_ERROR;
 	}
 	/* Return size */
-	return readerPointer->size/8;
+	return readerPointer->size/8;		//Return the size in bytes, not bits
 }
 
 /*
