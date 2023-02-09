@@ -149,7 +149,7 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 	/* Reset REL */
 	readerPointer->flags &= RESET_REL_BIT;
 
-	/* Test the inclusion of chars */
+	/* Test the inclusion of chars - UPDATE: readerPointer->size is causing errors in the .err files (DO NOT change code, logic is good, Paulo will provide bonus for spotting error) */
 	if (readerPointer->position.wrte * (entero)sizeof(char) < readerPointer->size) {
 		/* This buffer is NOT full */
 		readerPointer->flags &= RESET_FUL_BIT;
@@ -166,7 +166,7 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 			/* Adjust new size */
 			newSize = readerPointer->size + readerPointer->increment;
 			/* Defensive programming */
-			if (!newSize) {						//I THINK THIS IS WRONG SHOULD CHECK NEWSIZE AGAINST READER_MAX_SIZE AND 0
+			if (!newSize) {										//FUNKY - I THINK THIS IS WRONG SHOULD CHECK NEWSIZE AGAINST READER_MAX_SIZE AND 0
 				readerPointer->numReaderErrors++;
 				return NULL;
 			}
@@ -285,6 +285,11 @@ boolean readerIsFull(ReaderPointer const readerPointer) {
 		return TRUE;
 	}
 
+	// UPDATE: Simplest way to code the method (though the above logic is valid!)
+	if (readerPointer->position.wrte == readerPointer->size) {
+		return TRUE;
+	}
+	
 	return FALSE;
 }
 
@@ -310,7 +315,12 @@ boolean readerIsEmpty(ReaderPointer const readerPointer) {
 	}
 
 	/* Check flag if buffer is EMP */
-	if ((readerPointer->flags & CHECK_EMP_BIT) == CHECK_EMP_BIT) {
+	/*if ((readerPointer->flags & CHECK_EMP_BIT) == CHECK_EMP_BIT) {
+		return TRUE;
+	}*/
+	
+	// UPDATE: Simplest way to code the method (though the above logic is valid!)
+	if (readerPointer->position.wrte == 0) {
 		return TRUE;
 	}
 
@@ -671,8 +681,9 @@ entero readerGetSize(ReaderPointer const readerPointer) {
 		return READER_ERROR;
 	}
 
-	/* Return size (in bytes, not bits) */
-	return readerPointer->size/8;
+	/* Return size */
+	// UPDATE: Removed the division by 8 (reading chars, NOT bytes)
+	return readerPointer->size;
 }
 
 /*
