@@ -166,7 +166,7 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 			/* Adjust new size */
 			newSize = readerPointer->size + readerPointer->increment;
 			/* Defensive programming */
-			if (!newSize) {
+			if (!newSize) {						//I THINK THIS IS WRONG SHOULD CHECK NEWSIZE AGAINST READER_MAX_SIZE AND 0
 				readerPointer->numReaderErrors++;
 				return NULL;
 			}
@@ -176,7 +176,7 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, char ch) {
 			/*  Adjust new size */
 			newSize = readerPointer->size * readerPointer->increment;
 			/* Defensive programming */
-			if (!newSize) {
+			if (!newSize) {										//FUNKY HERE TOO
 				readerPointer->numReaderErrors++;
 				return NULL;
 			}
@@ -228,7 +228,7 @@ boolean readerClear(ReaderPointer const readerPointer) {
 
 	/* Adjust flags original */
 	readerPointer->flags &= READER_DEFAULT_FLAG;	//Resetting flags to 0x00
-	readerPointer->flags |= SET_EMP_BIT;			//Setting flags to empty 0x40
+	readerPointer->flags |= SET_EMP_BIT; //Setting flags to empty 0x40
 	
 	return TRUE;
 }
