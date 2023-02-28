@@ -38,7 +38,7 @@ project ("VelvetCompiler")
 add_executable (Velvet
 	"Compilers.h"	"Compilers.c"
 	"Reader.h"		"Reader.c"		"MainReader.c"
-#"		"Scanner.c"		"MainScanner.c"
+	"Scanner.c"		"MainScanner.c"
 #	"Parser.h"		"Parser.c"		"MainParser.c"
 )
 

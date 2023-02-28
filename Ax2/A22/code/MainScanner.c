@@ -94,10 +94,10 @@
 
  /* Global objects - variables (used in other codes as external) */
 ReaderPointer stringLiteralTable;	/* This buffer implements String Literal Table */
-julius_intg errorNumber;				/* Run-time error number = 0 by default (ANSI) */
+entero errorNumber;				/* Run-time error number = 0 by default (ANSI) */
 
 /* External objects */
-extern julius_intg line; /* Source code line numbers - defined in scanner.c */
+extern entero line; /* Source code line numbers - defined in scanner.c */
 extern Token tokenizer(sofia_nul);
 
 /*
@@ -105,10 +105,10 @@ extern Token tokenizer(sofia_nul);
  *  Function declarations
  * -------------------------------------------------------------
  */
-julius_void printScannerError(julius_char* fmt, ...);
-julius_void displayScanner(BufferReader* ptrBuffer);
-julius_long getScannerFilesize(julius_char* fname);
-julius_void printToken(Token t);
+void printScannerError(char* fmt, ...);
+void displayScanner(BufferReader* ptrBuffer);
+long getScannerFilesize(char* fname);
+void printToken(Token t);
 
 /*
 ************************************************************
@@ -120,12 +120,12 @@ julius_void printToken(Token t);
  ***********************************************************
  */
 
-julius_intg mainScanner(julius_intg argc, julius_char** argv) {
+entero mainScanner(entero argc, char** argv) {
 
 	ReaderPointer sourceBuffer;		/* Pointer to input (source) buffer */
 	FILE* fileHandler;				/* Input file handle */
 	Token currentToken;				/* Token produced by the scanner */
-	julius_intg loadSize = 0;		/* The size of the file loaded in the buffer */
+	entero loadSize = 0;		/* The size of the file loaded in the buffer */
 
 	numScannerErrors = 0;			/* Initializes the errors */
 
@@ -227,7 +227,7 @@ julius_intg mainScanner(julius_intg argc, julius_char** argv) {
 ***********************************************************
 */
 
-julius_void printScannerError(julius_char* fmt, ...) {
+void printScannerError(char* fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
 	(void)vfprintf(stderr, fmt, ap);
@@ -245,7 +245,7 @@ julius_void printScannerError(julius_char* fmt, ...) {
  ***********************************************************
  */
 
-julius_void displayScanner(BufferReader* ptrBuffer) {
+void displayScanner(BufferReader* ptrBuffer) {
 	printf("\nPrinting buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n", readerGetSize(ptrBuffer));
 	printf("The current size of the buffer is:  %d\n", readerGetPosWrte(ptrBuffer));
@@ -264,9 +264,9 @@ julius_void displayScanner(BufferReader* ptrBuffer) {
  ***********************************************************
  */
 
-julius_long getScannerFilesize(julius_char* fname) {
+long getScannerFilesize(char* fname) {
 	FILE* fileInput;
-	julius_long fileLength;
+	long fileLength;
 	fileInput = fopen(fname, "r");
 	if (fileInput == NULL) {
 		printScannerError("%s%s", "Cannot open file: ", fname);

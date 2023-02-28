@@ -78,11 +78,12 @@ entero main(entero argc, char** argv) {
 		printf("%s%c%s", "\n[Option '", PGM_READER, "': Starting READER .....]\n\n");
 		mainReader(argc, argv);
 		break;
-	/*
+
 	case PGM_SCANNER:
 		printf("%s%c%s", "\n[Option '", PGM_SCANNER, "': Starting SCANNER ....]\n\n");
 		mainScanner(argc, argv);
 		break;
+	/*
 	case PGM_PARSER:
 		printf("%s%c%s", "\n[Option '", PGM_PARSER, "': Starting PARSER .....]\n\n");
 		mainParser(argc, argv);
