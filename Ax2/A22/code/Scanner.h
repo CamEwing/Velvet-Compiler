@@ -71,14 +71,14 @@
 /* TO_DO: Define Token codes - Create your token classes */
 enum TOKENS {
 	ERR_T,		/*  0: Error token */
-	MNID_T,		/*  1: Method name identifier token (start: &) */
+	MNID_T,		/*  1: Method name identifier token (start: _ ) */
 	STR_T,		/*  2: String literal token */
-	LPR_T,		/*  3: Left parenthesis token */
-	RPR_T,		/*  4: Right parenthesis token */
-	LBR_T,		/*  5: Left brace token */
-	RBR_T,		/*  6: Right brace token */
-	KW_T,		/*  7: Keyword token */
-	EOS_T,		/*  8: End of statement (semicolon) */
+	LPR_T,		/*  3: Left parenthesis token ( '(' ) */
+	RPR_T,		/*  4: Right parenthesis token ( ')' ) */
+	LBR_T,		/*  5: Left brace token ( '{' ) */
+	RBR_T,		/*  6: Right brace token ( '}' ) */
+	KEY_T,		/*  7: Keyword token */
+	EOS_T,		/*  8: End of statement ( ';' ) */
 	RTE_T,		/*  9: Run-time error token */
 	INL_T,		/* 10: Run-time error token */
 	SEOF_T		/* 11: Source end-of-file token */
@@ -87,21 +87,19 @@ enum TOKENS {
 /* TO_DO: Operators token attributes */
 typedef enum ArithmeticOperators { OP_ADD, OP_SUB, OP_MUL, OP_DIV } AriOperator;
 typedef enum RelationalOperators { OP_EQ, OP_NE, OP_GT, OP_LT } RelOperator;
-typedef enum LogicalOperators { OP_AND, OP_OR, OP_NOT } LogOperator;
 typedef enum SourceEndOfFile { SEOF_0, SEOF_255 } EofOperator;
 
 /* TO_DO: Data structures for declaring the token and its attributes */
 typedef union TokenAttribute {
-	entero codeType;      /* integer attributes accessor */
+	entero codeType;					/* integer attributes accessor */
 	AriOperator arithmeticOperator;		/* arithmetic operator attribute code */
 	RelOperator relationalOperator;		/* relational operator attribute code */
-	LogOperator logicalOperator;		/* logical operator attribute code */
 	EofOperator seofType;				/* source-end-of-file attribute code */
-	entero intValue;						/* integer literal attribute (value) */
-	entero keywordIndex;					/* keyword index in the keyword table */
+	entero intValue;					/* integer literal attribute (value) */
+	entero keywordIndex;				/* keyword index in the keyword table */
 	entero contentString;				/* string literal offset from the beginning of the string literal buffer (stringLiteralTable->content) */
 	decimal floatValue;					/* floating-point literal attribute (value) */
-	char idLexeme[VID_LEN + 1];		/* variable identifier token attribute */
+	char idLexeme[VID_LEN + 1];			/* variable identifier token attribute */
 	char errLexeme[ERR_LEN + 1];		/* error token attribite */
 } TokenAttribute;
 
@@ -109,7 +107,7 @@ typedef union TokenAttribute {
 typedef struct idAttibutes {
 	byte flags;			/* Flags information */
 	union {
-		entero intValue;				/* Integer value */
+		entero intValue;			/* Integer value */
 		decimal floatValue;			/* Float value */
 		char* stringContent;		/* String value */
 	} values;
@@ -149,21 +147,47 @@ typedef struct Token {
 #define ESWR	7		/* Error state with retract */
 
  /* TO_DO: State transition table definition */
-#define TABLE_COLUMNS 7
+#define TABLE_COLUMNS 11
 
 /* TO_DO: Transition table - type of states defined in separate table */
+#define ES 5 //temp empty state
+
 static entero transitionTable[][TABLE_COLUMNS] = {
-	/*[A-z], [0-9],    _,    &,    ', SEOF, other
-	   L(0),  D(1), U(2), M(3), Q(4), E(5),  O(6) */
-	{     1,  ESNR, ESNR, ESNR,    4, ESWR, ESNR}, // S0: NOAS
-	{     1,     1,    1,    2, ESWR, ESWR,    3}, // S1: NOAS
-	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S2: ASNR (MVID)
-	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S3: ASWR (KEY)
-	{     4,     4,    4,    4,    5, ESWR,    4}, // S4: NOAS
-	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S5: ASNR (SL)
-	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S6: ASNR (ES)
-	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}  // S7: ASWR (ER)
+	/*	  /,      #,	  &,      _,    " ",     \n,  [A-z],  [0-9],      .,      ",   other,
+	 BAR(0), HAS(1), AMP(2), UND(3), WHT(4), NEW(5), ABC(6), NUM(7), POI(8), QUO(9), OTH(10),  */
+	{     1,      4,      6,      8,     ES,     ES,     16,     10,     ES,     14,     ES}, // S0
+	{     1,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES}, // S1
+	{     2,      2,      2,      2,      2,      3,      2,      2,      2,      2,      2}, // S2
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S3
+	{     5,      5,      5,      5,      5,      5,      4,      4,      5,      5,      5}, // S4
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S5
+	{     7,      7,      7,      7,      7,      7,      6,      6,      7,      7,      7}, // S6
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S7
+	{     9,      9,      9,      9,      9,      9,      8,      8,      9,      9,      9}, // S8
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S9
+	{    11,     11,     11,     11,     11,     11,     11,     10,     12,     11,     11}, // S10
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S11
+	{    13,     13,     13,     13,     13,     13,     13,     12,     13,     13,     13}, // S12
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S13
+	{    ES,     ES,     ES,     ES,     14,     ES,     14,     14,     ES,     15,     ES}, // S14
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S15
+	{    17,     17,     17,     17,     17,     17,     16,     17,     17,     17,     17}, // S16
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS} // S17
+
 };
+
+//static entero transitionTable[][TABLE_COLUMNS] = {
+//	/*[A-z], [0-9],    _,    &,    ', SEOF, other
+//	   L(0),  D(1), U(2), M(3), Q(4), E(5),  O(6) */
+//	{     1,  ESNR, ESNR, ESNR,    4, ESWR, ESNR}, // S0: NOAS
+//	{     1,     1,    1,    2, ESWR, ESWR,    3}, // S1: NOAS
+//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S2: ASNR (MVID)
+//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S3: ASWR (KEY)
+//	{     4,     4,    4,    4,    5, ESWR,    4}, // S4: NOAS
+//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S5: ASNR (SL)
+//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S6: ASNR (ES)
+//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}  // S7: ASWR (ER)
+//};
 
 /* Define accepting states types */
 #define NOFS	0		/* not accepting state */
@@ -235,20 +259,24 @@ Language keywords
 */
 
 /* TO_DO: Define the number of Keywords from the language */
-#define KWT_SIZE 10
+#define KWT_SIZE 13
 
 /* TO_DO: Define the list of keywords */
 static char* keywordTable[KWT_SIZE] = {
-	"data",
-	"code",
-	"int",
-	"real",
-	"string",
+	"method",
+	"ent",
+	"decimal",
+	"chain",
 	"if",
-	"then",
+	"elseif",
 	"else",
-	"while",
-	"do"
+	"for",
+	"true",
+	"false",
+	"send",
+	"print",
+	"input"
+
 };
 
 /* About indentation (useful for positional languages (ex: Python, Cobol) */

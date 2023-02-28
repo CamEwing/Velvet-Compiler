@@ -147,7 +147,7 @@ Token tokenizer(void) {
 		c = readerGetChar(sourceBuffer);
 
 		/* ------------------------------------------------------------------------
-			Part 1: Implementation of token driven scanner.
+			Part 1: Implementation of token driven scanner. 
 			Every token is possessed by its own dedicated code
 			-----------------------------------------------------------------------
 		*/
@@ -181,7 +181,7 @@ Token tokenizer(void) {
 			currentToken.code = RBR_T;
 			return currentToken;
 		/* Comments */
-		case '#':
+		case '//':
 			newc = readerGetChar(sourceBuffer);
 			do {
 				c = readerGetChar(sourceBuffer);
@@ -189,11 +189,22 @@ Token tokenizer(void) {
 					readerRetract(sourceBuffer);
 					//return currentToken;
 				}
-				else if (c == '\n') {
-					line++;
-				}
-			} while (c != '#' && c != CHARSEOF0 && c != CHARSEOF255);
+			} while (c == '\n' && c != CHARSEOF0 && c != CHARSEOF255);
 			break;
+
+		//case '#':
+		//	newc = readerGetChar(sourceBuffer);
+		//	do {
+		//		c = readerGetChar(sourceBuffer);
+		//		if (c == CHARSEOF0 || c == CHARSEOF255) {
+		//			readerRetract(sourceBuffer);
+		//			//return currentToken;
+		//		}
+		//		else if (c == '\n') {
+		//			line++;
+		//		}
+		//	} while (c != '#' && c != CHARSEOF0 && c != CHARSEOF255);
+		//	break;
 		/* Cases for END OF FILE */
 		case CHARSEOF0:
 			currentToken.code = SEOF_T;
@@ -450,7 +461,7 @@ Token funcKEY(char lexeme[]) {
 		if (!strcmp(lexeme, &keywordTable[j][0]))
 			kwindex = j;
 	if (kwindex != -1) {
-		currentToken.code = KW_T;
+		currentToken.code = KEY_T;
 		currentToken.attribute.codeType = kwindex;
 	}
 	else {
@@ -541,7 +552,7 @@ void printToken(Token t) {
 	case RBR_T:
 		printf("RBR_T\n");
 		break;
-	case KW_T:
+	case KEY_T:
 		printf("KW_T\t\t%s\n", keywordTable[t.attribute.codeType]);
 		break;
 	case EOS_T:
