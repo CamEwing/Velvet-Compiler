@@ -72,7 +72,7 @@ enum TOKENS {
 	EOS_T,		/*  8: End of statement ( ';' ) */
 	RTE_T,		/*  9: Run-time error token */
 	INL_T,		/* 10: Run-time error token */
-	SEOF_T		/* 11: Source end-of-file token */
+	SEOF_T,		/* 11: Source end-of-file token */
 };
 
 /* TO_DO: Operators token attributes */
@@ -124,13 +124,24 @@ typedef struct Token {
  */
 
 /* TO_DO: Define lexeme FIXED classes */
+/* BAR(0), HAS(1), AMP(2), UND(3), -WHT(4), -NEW(5), -ABC(6), -NUM(7), POI(8), QUO(9), -OTH(10) */
 /* These constants will be used on nextClass */
-#define CHRCOL2 '_'
-#define CHRCOL3 '&'
-#define CHRCOL4 '\''
+//#define CHRCOL2 '_'
+//#define CHRCOL3 '&'
+//#define CHRCOL4 '\'
+
+#define CHRCOL2 '/'
+#define CHRCOL3 '#'
+#define CHRCOL4 '&'
+#define CHRCOL5 '_'
+#define CHRCOL6 '.'
+#define CHRCOL7 '\"'
 
 /* These constants will be used on VID / MID function */
-#define MNIDPREFIX '&'
+#define MNIDPREFIX '_'
+//Added
+#define ENIDPREFIX '#'
+#define CNIDPREFIX '&'
 
 /* TO_DO: Error states and illegal state */
 #define FS		100		/* Illegal state */
@@ -141,6 +152,7 @@ typedef struct Token {
 #define TABLE_COLUMNS 11
 
 /* TO_DO: Transition table - type of states defined in separate table */
+//Added
 #define ES 5 //temp empty state
 
 static entero transitionTable[][TABLE_COLUMNS] = {
@@ -163,8 +175,7 @@ static entero transitionTable[][TABLE_COLUMNS] = {
 	{    ES,     ES,     ES,     ES,     14,     ES,     14,     14,     ES,     15,     ES}, // S14
 	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S15
 	{    17,     17,     17,     17,     17,     17,     16,     17,     17,     17,     17}, // S16
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS} // S17
-
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}  // S17
 };
 
 //static entero transitionTable[][TABLE_COLUMNS] = {
@@ -267,7 +278,6 @@ static char* keywordTable[KWT_SIZE] = {
 	"send",
 	"print",
 	"input"
-
 };
 
 /* About indentation (useful for positional languages (ex: Python, Cobol) */

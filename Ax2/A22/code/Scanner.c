@@ -125,14 +125,14 @@ Token tokenizer(void) {
 	/* TO_DO: Follow the standard and adjust datatypes */
 
 	Token currentToken = { 0 }; /* token to return after pattern recognition. Set all structure members to 0 */
-	char c;	/* input symbol */
-	entero state = 0;		/* initial state of the FSM */
-	entero lexStart;		/* start offset of a lexeme in the input char buffer (array) */
-	entero lexEnd;		/* end offset of a lexeme in the input char buffer (array)*/
+	char c;						/* input symbol */
+	entero state = 0;			/* initial state of the FSM */
+	entero lexStart;			/* start offset of a lexeme in the input char buffer (array) */
+	entero lexEnd;				/* end offset of a lexeme in the input char buffer (array)*/
 
-	entero lexLength;		/* token length */
-	entero i;				/* counter */
-	char newc;			/* new char */
+	entero lexLength;			/* token length */
+	entero i;					/* counter */
+	char newc;					/* new char */
 	
 	while (1) { /* endless loop broken by token returns it will generate a warning */
 		c = readerGetChar(sourceBuffer);
@@ -173,6 +173,8 @@ Token tokenizer(void) {
 			return currentToken;
 		/* Comments */
 		case '//':
+
+
 			newc = readerGetChar(sourceBuffer);
 			do {
 				c = readerGetChar(sourceBuffer);
@@ -301,7 +303,10 @@ entero nextState(entero state, char c) {
 /* TO_DO: Use your column configuration */
 
 /* Adjust the logic to return next column in TT */
-/*	[A-z](0), [0-9](1),	_(2), &(3), "(4), SEOF(5), other(6) */
+/*	[A-z](0), [0-9](1),	_(2), &(3), "(4), SEOF(5), other(6) 
+
+	BAR(0), HAS(1), AMP(2), UND(3), WHT(4), NEW(5), ABC(6), NUM(7), POI(8), QUO(9), OTH(10)	*/
+
 
 entero nextClass(char c) {
 	entero val = -1;
