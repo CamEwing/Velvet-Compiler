@@ -171,10 +171,9 @@ Token tokenizer(void) {
 		case '}':
 			currentToken.code = RBR_T;
 			return currentToken;
-		/* Comments */
-		case '//':
 
-
+		/* Comments - WHAT DO WE DO HERE? */
+		case '/':
 			newc = readerGetChar(sourceBuffer);
 			do {
 				c = readerGetChar(sourceBuffer);
@@ -303,22 +302,26 @@ entero nextState(entero state, char c) {
 /* TO_DO: Use your column configuration */
 
 /* Adjust the logic to return next column in TT */
-/*	[A-z](0), [0-9](1),	_(2), &(3), "(4), SEOF(5), other(6) 
-
-	BAR(0), HAS(1), AMP(2), UND(3), WHT(4), NEW(5), ABC(6), NUM(7), POI(8), QUO(9), OTH(10)	*/
-
-
 entero nextClass(char c) {
 	entero val = -1;
 	switch (c) {
 	case CHRCOL2:
-		val = 2;
+		val = 0;
 		break;
 	case CHRCOL3:
-		val = 3;
+		val = 1;
 		break;
 	case CHRCOL4:
-		val = 4;
+		val = 2;
+		break;
+	case CHRCOL5:
+		val = 3;
+		break;
+	case CHRCOL6:
+		val = 8;
+		break;
+	case CHRCOL7:
+		val = 9;
 		break;
 	case CHARSEOF0:
 	case CHARSEOF255:
@@ -326,11 +329,11 @@ entero nextClass(char c) {
 		break;
 	default:
 		if (isalpha(c))
-			val = 0;
-		else if (isdigit(c))
-			val = 1;
-		else
 			val = 6;
+		else if (isdigit(c))
+			val = 7;
+		else
+			val = 10;
 	}
 	return val;
 }

@@ -83,8 +83,9 @@ Main functions signatures
 ------------------------------------------------------------
 */
 entero mainReader(entero argc, char** argv);
-/*
 entero mainScanner(entero argc, char** argv);
+
+/*
 entero mainParser(entero argc, char** argv);
 */
 void printLogo();

@@ -70,9 +70,11 @@ enum TOKENS {
 	RBR_T,		/*  6: Right brace token ( '}' ) */
 	KEY_T,		/*  7: Keyword token */
 	EOS_T,		/*  8: End of statement ( ';' ) */
-	RTE_T,		/*  9: Run-time error token */
-	INL_T,		/* 10: Run-time error token */
-	SEOF_T,		/* 11: Source end-of-file token */
+	ENID_T,		/*  9: Variable name identifier for entero & decimal (start: #) */
+	CNID_T,		/* 10: Variable name identifier for chain (start: &) */
+	RTE_T,		/* 11: Run-time error token */
+	INL_T,		/* 12: Run-time error token */
+	SEOF_T,		/* 13: Source end-of-file token */
 };
 
 /* TO_DO: Operators token attributes */
@@ -86,10 +88,10 @@ typedef union TokenAttribute {
 	AriOperator arithmeticOperator;		/* arithmetic operator attribute code */
 	RelOperator relationalOperator;		/* relational operator attribute code */
 	EofOperator seofType;				/* source-end-of-file attribute code */
-	entero intValue;					/* integer literal attribute (value) */
+	entero entValue;					/* integer literal attribute (value) - PREVIOUSLY intValue */
 	entero keywordIndex;				/* keyword index in the keyword table */
-	entero contentString;				/* string literal offset from the beginning of the string literal buffer (stringLiteralTable->content) */
-	decimal floatValue;					/* floating-point literal attribute (value) */
+	entero chainContent;				/* string literal offset from the beginning of the string literal buffer (stringLiteralTable->content) - PREVIOUSLY contentString */
+	decimal decimalValue;				/* floating-point literal attribute (value) - PREVIOUSLY floatValue */
 	char idLexeme[VID_LEN + 1];			/* variable identifier token attribute */
 	char errLexeme[ERR_LEN + 1];		/* error token attribite */
 } TokenAttribute;
@@ -98,9 +100,9 @@ typedef union TokenAttribute {
 typedef struct idAttibutes {
 	byte flags;			/* Flags information */
 	union {
-		entero intValue;			/* Integer value */
-		decimal floatValue;			/* Float value */
-		char* stringContent;		/* String value */
+		entero entValue;				/* Integer value - PREVIOUSLY intValue */
+		decimal decimalValue;			/* Float value - PREVIOUSLY floatValue */
+		char* chainContent;				/* String value - PREVIOUSLY stringContent */
 	} values;
 } IdAttibutes;
 
@@ -139,7 +141,6 @@ typedef struct Token {
 
 /* These constants will be used on VID / MID function */
 #define MNIDPREFIX '_'
-//Added
 #define ENIDPREFIX '#'
 #define CNIDPREFIX '&'
 
@@ -158,24 +159,24 @@ typedef struct Token {
 static entero transitionTable[][TABLE_COLUMNS] = {
 	/*	  /,      #,	  &,      _,    " ",     \n,  [A-z],  [0-9],      .,      ",   other,
 	 BAR(0), HAS(1), AMP(2), UND(3), WHT(4), NEW(5), ABC(6), NUM(7), POI(8), QUO(9), OTH(10),  */
-	{     1,      4,      6,      8,     ES,     ES,     16,     10,     ES,     14,     ES}, // S0
-	{     1,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES}, // S1
-	{     2,      2,      2,      2,      2,      3,      2,      2,      2,      2,      2}, // S2
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S3
-	{     5,      5,      5,      5,      5,      5,      4,      4,      5,      5,      5}, // S4
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S5
-	{     7,      7,      7,      7,      7,      7,      6,      6,      7,      7,      7}, // S6
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S7
-	{     9,      9,      9,      9,      9,      9,      8,      8,      9,      9,      9}, // S8
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S9
-	{    11,     11,     11,     11,     11,     11,     11,     10,     12,     11,     11}, // S10
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S11
-	{    13,     13,     13,     13,     13,     13,     13,     12,     13,     13,     13}, // S12
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S13
-	{    ES,     ES,     ES,     ES,     14,     ES,     14,     14,     ES,     15,     ES}, // S14
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S15
-	{    17,     17,     17,     17,     17,     17,     16,     17,     17,     17,     17}, // S16
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}  // S17
+	{     1,      4,      6,      8,     ES,     ES,     16,     10,     ES,     14,     ES}, // S0 - NOFS
+	{     1,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES}, // S1 - NOFS
+	{     2,      2,      2,      2,      2,      3,      2,      2,      2,      2,      2}, // S2	- NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S3 - FSNR
+	{     5,      5,      5,      5,      5,      5,      4,      4,      5,      5,      5}, // S4 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S5 - FSWR
+	{     7,      7,      7,      7,      7,      7,      6,      6,      7,      7,      7}, // S6 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S7 - FSWR
+	{     9,      9,      9,      9,      9,      9,      8,      8,      9,      9,      9}, // S8 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S9 - FSWR
+	{    11,     11,     11,     11,     11,     11,     11,     10,     12,     11,     11}, // S10 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S11 - FSWR
+	{    13,     13,     13,     13,     13,     13,     13,     12,     13,     13,     13}, // S12 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S13 - FSWR
+	{    ES,     ES,     ES,     ES,     14,     ES,     14,     14,     ES,     15,     ES}, // S14 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S15 - FSNR
+	{    17,     17,     17,     17,     17,     17,     16,     17,     17,     17,     17}, // S16 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}  // S17 - FSWR
 };
 
 //static entero transitionTable[][TABLE_COLUMNS] = {
@@ -198,14 +199,34 @@ static entero transitionTable[][TABLE_COLUMNS] = {
 
 /* TO_DO: Define list of acceptable states */
 static entero stateType[] = {
-	NOFS, /* 00 */
-	NOFS, /* 01 */
-	FSNR, /* 02 (MID) - Methods */
-	FSWR, /* 03 (KEY) */
-	NOFS, /* 04 */
-	FSNR, /* 05 (SL) */
-	FSNR, /* 06 (Err1 - no retract) */
-	FSWR  /* 07 (Err2 - retract) */
+
+	NOFS, // S0
+	NOFS, // S1
+	NOFS, // S2
+	FSNR, // S3
+	NOFS, // S4
+	FSWR, // S5
+	NOFS, // S6
+	FSWR, // S7
+	NOFS, // S8
+	FSWR, // S9
+	NOFS, // S10
+	FSWR, // S11
+	NOFS, // S12
+	FSWR, // S13
+	NOFS, // S14
+	FSNR, // S15
+	NOFS, // S16
+	FSWR  // S17
+
+	//NOFS, /* 00 */
+	//NOFS, /* 01 */
+	//FSNR, /* 02 (MID) - Methods */
+	//FSWR, /* 03 (KEY) */
+	//NOFS, /* 04 */
+	//FSNR, /* 05 (SL) */
+	//FSNR, /* 06 (Err1 - no retract) */
+	//FSWR  /* 07 (Err2 - retract) */
 };
 
 /*
@@ -287,6 +308,7 @@ static char* keywordTable[KWT_SIZE] = {
  */
 
 #define INDENT '\t'  /* Tabulation */
+
 
 /* TO_DO: Should be used if no symbol table is implemented */
 typedef struct languageAttributes {
