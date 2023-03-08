@@ -73,7 +73,7 @@ enum TOKENS {
 	ENID_T,		/*  9: Variable name identifier for entero & decimal (start: #) */
 	CNID_T,		/* 10: Variable name identifier for chain (start: &) */
 	RTE_T,		/* 11: Run-time error token */
-	INL_T,		/* 12: Run-time error token */
+	INL_T,		/* 12: Integer literal token */
 	SEOF_T,		/* 13: Source end-of-file token */
 };
 
@@ -136,8 +136,8 @@ typedef struct Token {
 #define CHRCOL3 '#'
 #define CHRCOL4 '&'
 #define CHRCOL5 '_'
-#define CHRCOL6 '.'
-#define CHRCOL7 '\"'
+#define CHRCOL6 '.'		//change to col 8 or change TT
+#define CHRCOL7 '\"'	//change to col 9 or change TT
 
 /* These constants will be used on VID / MID function */
 #define MNIDPREFIX '_'
@@ -301,21 +301,7 @@ static char* keywordTable[KWT_SIZE] = {
 	"input"
 };
 
-/* About indentation (useful for positional languages (ex: Python, Cobol) */
 
-/*
- * Scanner attributes to be used (ex: including: intendation data
- */
-
-#define INDENT '\t'  /* Tabulation */
-
-
-/* TO_DO: Should be used if no symbol table is implemented */
-typedef struct languageAttributes {
-	char indentationCharType;
-	entero indentationCurrentPos;
-	/* TO_DO: Include any extra attribute to be used in your scanner (OPTIONAL and FREE) */
-} LanguageAttributes;
 
 /* Number of errors */
 entero numScannerErrors;

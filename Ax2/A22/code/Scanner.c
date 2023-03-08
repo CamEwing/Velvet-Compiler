@@ -172,17 +172,27 @@ Token tokenizer(void) {
 			currentToken.code = RBR_T;
 			return currentToken;
 
+		case '+':
+		case '-':
+		case '*':
 		/* Comments - WHAT DO WE DO HERE? */
 		case '/':
 			newc = readerGetChar(sourceBuffer);
-			do {
-				c = readerGetChar(sourceBuffer);
-				if (c == CHARSEOF0 || c == CHARSEOF255) {
-					readerRetract(sourceBuffer);
-					//return currentToken;
-				}
-			} while (c == '\n' && c != CHARSEOF0 && c != CHARSEOF255);
-			break;
+			if (newc == '/') {
+				do {
+					c = readerGetChar(sourceBuffer);
+					if (c == '\n' || c == CHARSEOF0 || c == CHARSEOF255) {
+						readerRetract(sourceBuffer);
+						return currentToken;
+					}
+				} while (c != '\n' && c != CHARSEOF0 && c != CHARSEOF255);
+			}
+			else {
+				readerRetract(sourceBuffer);
+				currentToken.code = DIV_T;
+				return currentToken;
+			}
+
 
 		//case '#':
 		//	newc = readerGetChar(sourceBuffer);
@@ -361,7 +371,7 @@ Token funcIL(char lexeme[]) {
 		tlong = atol(lexeme);
 		if (tlong >= 0 && tlong <= SHRT_MAX) {
 			currentToken.code = INL_T;
-			currentToken.attribute.intValue = (entero)tlong;
+			currentToken.attribute.entValue = (entero)tlong;
 		}
 		else {
 			currentToken = (*finalStateTable[ESNR])(lexeme);
@@ -395,6 +405,8 @@ Token funcID(char lexeme[]) {
 			currentToken.code = MNID_T;
 			isID = TRUE;
 			break;
+		case ENIDPREFIX:
+		case CNIDPREFIX:
 		default:
 			// Test Keyword
 			currentToken = funcKEY(lexeme);
@@ -423,7 +435,7 @@ Token funcID(char lexeme[]) {
 Token funcSL(char lexeme[]) {
 	Token currentToken = { 0 };
 	entero i = 0, len = (entero)strlen(lexeme);
-	currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
+	currentToken.attribute.chainContent = readerGetPosWrte(stringLiteralTable);
 	for (i = 1; i < len - 1; i++) {
 		if (lexeme[i] == '\n')
 			line++;
