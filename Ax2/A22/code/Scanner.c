@@ -173,8 +173,14 @@ Token tokenizer(void) {
 			return currentToken;
 
 		case '+':
+			currentToken.code = ADD_T;
+			return currentToken;
 		case '-':
+			currentToken.code = SUB_T;
+			return currentToken;
 		case '*':
+			currentToken.code = MUL_T;
+			return currentToken;
 		/* Comments - WHAT DO WE DO HERE? */
 		case '/':
 			newc = readerGetChar(sourceBuffer);
@@ -192,22 +198,18 @@ Token tokenizer(void) {
 				currentToken.code = DIV_T;
 				return currentToken;
 			}
-
-
-		//case '#':
-		//	newc = readerGetChar(sourceBuffer);
-		//	do {
-		//		c = readerGetChar(sourceBuffer);
-		//		if (c == CHARSEOF0 || c == CHARSEOF255) {
-		//			readerRetract(sourceBuffer);
-		//			//return currentToken;
-		//		}
-		//		else if (c == '\n') {
-		//			line++;
-		//		}
-		//	} while (c != '#' && c != CHARSEOF0 && c != CHARSEOF255);
-		//	break;
-		/* Cases for END OF FILE */
+		case '=':
+			currentToken.code = EQ_T;
+			return currentToken;
+		case '>': //Relational Ops
+			currentToken.code = GT_T;
+			return currentToken;
+		case '<':
+			currentToken.code = LT_T;
+			return currentToken;
+		case '.':
+			currentToken.code = POI_T;
+			return currentToken;
 		case CHARSEOF0:
 			currentToken.code = SEOF_T;
 			currentToken.attribute.seofType = SEOF_0;
@@ -315,27 +317,27 @@ entero nextState(entero state, char c) {
 entero nextClass(char c) {
 	entero val = -1;
 	switch (c) {
-	case CHRCOL2:
-		val = 0;
-		break;
-	case CHRCOL3:
+	case CHRCOL1:
 		val = 1;
 		break;
-	case CHRCOL4:
+	case CHRCOL2:
 		val = 2;
 		break;
-	case CHRCOL5:
+	case CHRCOL3:
 		val = 3;
 		break;
-	case CHRCOL6:
+	case CHRCOL4:
+		val = 4;
+		break;
+	case CHRCOL8:
 		val = 8;
 		break;
-	case CHRCOL7:
+	case CHRCOL9:
 		val = 9;
 		break;
 	case CHARSEOF0:
 	case CHARSEOF255:
-		val = 5;
+		val = 0;
 		break;
 	default:
 		if (isalpha(c))
@@ -354,10 +356,10 @@ entero nextClass(char c) {
   * Acceptance State Function IL
   *		Function responsible to identify IL (integer literals).
   * - It is necessary respect the limit (ex: 2-byte integer in C).
-  * - In the case of larger lexemes, error shoul be returned.
+  * - In the case of larger lexemes, error should be returned.
   * - Only first ERR_LEN characters are accepted and eventually,
   *   additional three dots (...) should be put in the output.
-  ***********************************************************
+  ************************************************************
   */
   /* TO_DO: Adjust the function for IL */
 
@@ -379,7 +381,6 @@ Token funcIL(char lexeme[]) {
 	}
 	return currentToken;
 }
-
 
 /*
  ************************************************************
@@ -406,7 +407,13 @@ Token funcID(char lexeme[]) {
 			isID = TRUE;
 			break;
 		case ENIDPREFIX:
+			currentToken.code = ENID_T;
+			isID = TRUE;
+			break;
 		case CNIDPREFIX:
+			currentToken.code = CNID_T;
+			isID = TRUE;
+			break;
 		default:
 			// Test Keyword
 			currentToken = funcKEY(lexeme);
@@ -416,6 +423,7 @@ Token funcID(char lexeme[]) {
 		strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
 		currentToken.attribute.idLexeme[VID_LEN] = CHARSEOF0;
 	}
+
 	return currentToken;
 }
 
@@ -522,8 +530,8 @@ Token funcErr(char lexeme[]) {
 void printToken(Token t) {
 
 	/* External variables */
-	extern char* keywordTable[]; /* link to keyword table in */
-	extern numScannerErrors;			/* link to number of errors (defined in Scanner.h) */
+	extern char* keywordTable[];	 /* link to keyword table in */
+	extern numScannerErrors;		 /* link to number of errors (defined in Scanner.h) */
 
 	switch (t.code) {
 	case RTE_T:
@@ -568,6 +576,36 @@ void printToken(Token t) {
 		break;
 	case EOS_T:
 		printf("EOS_T\n");
+		break;
+	case ENID_T:
+		printf("ENID_T\t\t%s\n", t.attribute.idLexeme);
+		break;
+	case CNID_T:
+		printf("CNID_T\t\t%s\n", t.attribute.idLexeme);
+		break;
+	case INL_T:
+		printf("INL_T\t\t%d\t\n", (entero)t.attribute.codeType);
+		break;
+	case ADD_T:
+		printf("ADD_T\n");
+		break;
+	case SUB_T:
+		printf("SUB_T\n");
+		break;
+	case MUL_T:
+		printf("MUL_T\n");
+		break;
+	case DIV_T:
+		printf("DIV_T\n");
+		break;
+	case EQ_T:
+		printf("EQ_T\n");
+		break;
+	case GT_T:
+		printf("GT_T\n");
+		break;
+	case LT_T:
+		printf("LT_T\n");
 		break;
 	default:
 		//numScannerErrors++;

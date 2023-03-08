@@ -75,6 +75,14 @@ enum TOKENS {
 	RTE_T,		/* 11: Run-time error token */
 	INL_T,		/* 12: Integer literal token */
 	SEOF_T,		/* 13: Source end-of-file token */
+	ADD_T,		/* 14: Addition token ( '+' ) */
+	SUB_T,		/* 15: Subtraction token ( '-' ) */
+	MUL_T,		/* 16: Multiplication token ( '*' ) */
+	DIV_T,		/* 17: Division token ( '/' ) */
+	EQ_T,		/* 18: Equal token ( '=' ) */
+	GT_T,		/* 19: Greater-than token ( '>' ) */
+	LT_T,		/* 20: Less-than token ( '<' ) */
+	POI_T
 };
 
 /* TO_DO: Operators token attributes */
@@ -132,12 +140,13 @@ typedef struct Token {
 //#define CHRCOL3 '&'
 //#define CHRCOL4 '\'
 
-#define CHRCOL2 '/'
-#define CHRCOL3 '#'
-#define CHRCOL4 '&'
-#define CHRCOL5 '_'
-#define CHRCOL6 '.'		//change to col 8 or change TT
-#define CHRCOL7 '\"'	//change to col 9 or change TT
+
+#define CHRCOL1 '#'
+#define CHRCOL2 '&'
+#define CHRCOL3 '_'
+#define CHRCOL4 ' '
+#define CHRCOL8 '.'		//change to col 8 or change TT
+#define CHRCOL9 '\"'	//change to col 9 or change TT
 
 /* These constants will be used on VID / MID function */
 #define MNIDPREFIX '_'
@@ -153,30 +162,27 @@ typedef struct Token {
 #define TABLE_COLUMNS 11
 
 /* TO_DO: Transition table - type of states defined in separate table */
-//Added
-#define ES 5 //temp empty state
 
 static entero transitionTable[][TABLE_COLUMNS] = {
-	/*	  /,      #,	  &,      _,    " ",     \n,  [A-z],  [0-9],      .,      ",   other,
-	 BAR(0), HAS(1), AMP(2), UND(3), WHT(4), NEW(5), ABC(6), NUM(7), POI(8), QUO(9), OTH(10),  */
-	{     1,      4,      6,      8,     ES,     ES,     16,     10,     ES,     14,     ES}, // S0 - NOFS
-	{     1,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES,     ES}, // S1 - NOFS
-	{     2,      2,      2,      2,      2,      3,      2,      2,      2,      2,      2}, // S2	- NOFS
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S3 - FSNR
-	{     5,      5,      5,      5,      5,      5,      4,      4,      5,      5,      5}, // S4 - NOFS
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S5 - FSWR
-	{     7,      7,      7,      7,      7,      7,      6,      6,      7,      7,      7}, // S6 - NOFS
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S7 - FSWR
-	{     9,      9,      9,      9,      9,      9,      8,      8,      9,      9,      9}, // S8 - NOFS
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S9 - FSWR
-	{    11,     11,     11,     11,     11,     11,     11,     10,     12,     11,     11}, // S10 - NOFS
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S11 - FSWR
-	{    13,     13,     13,     13,     13,     13,     13,     12,     13,     13,     13}, // S12 - NOFS
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S13 - FSWR
-	{    ES,     ES,     ES,     ES,     14,     ES,     14,     14,     ES,     15,     ES}, // S14 - NOFS
+	/* SEOF,      #,	  &,      _,    " ",     \n,  [A-z],  [0-9],      .,      ",   other,
+	 EOF(0), HAS(1), AMP(2), UND(3), WHT(4), NEW(5), ABC(6), NUM(7), POI(8), QUO(9), OTH(10),  */
+	{  ESWR,      1,      3,      5,   ESNR,   ESNR,     13,      7,   ESNR,     11,   ESNR}, // S0  - NOFS
+	{  ESWR,      2,      2,      2,      2,      2,      1,      1,      2,      2,      2}, // S1  - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S2  - FSWR
+	{  ESWR,      4,      4,      4,      4,      4,      3,      3,      4,      4,      4}, // S3  - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S4  - FSWR
+	{  ESWR,      6,      6,      6,      6,      6,      5,      5,      6,      6,      6}, // S5  - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S6  - FSWR
+	{  ESWR,      8,      8,      8,      8,      8,      8,      7,      9,      8,      8}, // S7  - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S8  - FSWR
+	{  ESWR,     10,     10,     10,     10,     10,     10,      9,     10,     10,     10}, // S9  - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S10 - FSWR
+	{  ESWR,   ESNR,   ESNR,   ESNR,     11,   ESNR,     11,     11,   ESNR,     12,   ESNR}, // S11 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S12 - FSNR
+	{  ESWR,     14,     14,     14,     14,     14,     13,     14,     14,     14,     14}, // S13 - NOFS
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S14 - FSWR
 	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}, // S15 - FSNR
-	{    17,     17,     17,     17,     17,     17,     16,     17,     17,     17,     17}, // S16 - NOFS
-	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}  // S17 - FSWR
+	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}  // S16 - FSWR
 };
 
 //static entero transitionTable[][TABLE_COLUMNS] = {
@@ -199,25 +205,23 @@ static entero transitionTable[][TABLE_COLUMNS] = {
 
 /* TO_DO: Define list of acceptable states */
 static entero stateType[] = {
-
 	NOFS, // S0
 	NOFS, // S1
-	NOFS, // S2
-	FSNR, // S3
-	NOFS, // S4
-	FSWR, // S5
-	NOFS, // S6
-	FSWR, // S7
-	NOFS, // S8
-	FSWR, // S9
-	NOFS, // S10
-	FSWR, // S11
-	NOFS, // S12
-	FSWR, // S13
-	NOFS, // S14
+	FSWR, // S2
+	NOFS, // S3
+	FSWR, // S4
+	NOFS, // S5
+	FSWR, // S6
+	NOFS, // S7
+	FSWR, // S8
+	NOFS, // S9
+	FSWR, // S10
+	NOFS, // S11
+	FSNR, // S12
+	NOFS, // S13
+	FSWR, // S14
 	FSNR, // S15
-	NOFS, // S16
-	FSWR  // S17
+	FSWR  // S16
 
 	//NOFS, /* 00 */
 	//NOFS, /* 01 */
@@ -265,14 +269,23 @@ Token funcIL	(char lexeme[]);
 
 /* TO_DO: Define final state table */
 static PTR_ACCFUN finalStateTable[] = {
-	NULL,		/* -    [00] */
-	NULL,		/* -    [01] */
-	funcID,		/* MNID	[02] - Methods */
-	funcKEY,	/* KEY  [03] - Keywords */
-	NULL,		/* -    [04] */
-	funcSL,		/* SL   [05] - String Literal */
-	funcErr,	/* ERR1 [06] - No retract */
-	funcErr		/* ERR2 [07] - Retract */
+	NULL,		/* -     [00] */
+	NULL,		/* -     [01] */
+	funcID,		/* ENID	 [02] - Numerical Variable ID */
+	NULL,		/* -	 [03] */
+	funcID,		/* CNID  [04] - Chain Variable ID*/
+	NULL,		/* -     [05]  */
+	funcID,		/* MNID  [06] - Method Name ID */
+	NULL,		/* -     [07] */
+	funcIL,		/* INL_T [08] - Integer Literal */
+	NULL,		/* -	 [09] */
+	funcIL,		/* INL_T [10] - Decimal Literal ??? */
+	NULL,		/* -     [11] */
+	funcSL,		/* STR_T [12] - String Literal */
+	NULL,		/* -     [13]  */
+	funcKEY,	/* KEY_T [14] - Keywords */
+	funcErr,	/* ERR1	 [15] - Error No Return */
+	funcErr		/* ERR2	 [16] - Error With Return */
 };
 
 /*
@@ -282,11 +295,10 @@ Language keywords
 */
 
 /* TO_DO: Define the number of Keywords from the language */
-#define KWT_SIZE 13
+#define KWT_SIZE 12
 
 /* TO_DO: Define the list of keywords */
 static char* keywordTable[KWT_SIZE] = {
-	"method",
 	"ent",
 	"decimal",
 	"chain",
