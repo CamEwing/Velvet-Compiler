@@ -35,4 +35,4 @@ add_executable (Velvet
 #	"Parser.h"		"Parser.c"		"MainParser.c"
 )
 
-# TO_DO: Add tests and install targets if needed.
+# Add tests and install targets if needed.

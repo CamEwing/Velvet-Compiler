@@ -48,9 +48,9 @@
 #include <_null.h> /* NULL pointer constant is defined there */
 #endif
 
-/*#pragma warning(1:4001) */	/*to enforce C89 type comments  - to make //comments an warning */
+/* #pragma warning(1:4001) */			/*to enforce C89 type comments  - to make //comments an warning */
 
-/*#pragma warning(error:4001)*/	/* to enforce C89 comments - to make // comments an error */
+/* #pragma warning(error:4001) */		/* to enforce C89 comments - to make // comments an error */
 
 /* Constants */
 #define VID_LEN 20  /* variable identifier length */
@@ -59,7 +59,7 @@
 
 #define RTE_CODE 1  /* Value for run-time error */
 
-/* TO_DO: Define Token codes - Create your token classes */
+/* Define Token codes - Create your token classes */
 enum TOKENS {
 	ERR_T,		/*  0: Error token */
 	MNID_T,		/*  1: Method name identifier token (start: _ ) */
@@ -83,15 +83,16 @@ enum TOKENS {
 	GT_T,		/* 19: Greater-than token ( '>' ) */
 	LT_T,		/* 20: Less-than token ( '<' ) */
 	COM_T,		/* 21: Comment token ( '/' ) */
-	DECI_T		/* 22: Floating point token ( '<' ) */
+	DECI_T,		/* 22: Floating point token ( '.' ) */
+	COMA_T		/* 25: Comma token ( ',' ) */
 };
 
-/* TO_DO: Operators token attributes */
+/* Operators token attributes */
 typedef enum ArithmeticOperators { OP_ADD, OP_SUB, OP_MUL, OP_DIV } AriOperator;
 typedef enum RelationalOperators { OP_EQ, OP_NE, OP_GT, OP_LT } RelOperator;
 typedef enum SourceEndOfFile { SEOF_0, SEOF_255 } EofOperator;
 
-/* TO_DO: Data structures for declaring the token and its attributes */
+/* Data structures for declaring the token and its attributes */
 typedef union TokenAttribute {
 	entero codeType;					/* integer attributes accessor */
 	AriOperator arithmeticOperator;		/* arithmetic operator attribute code */
@@ -105,9 +106,9 @@ typedef union TokenAttribute {
 	char errLexeme[ERR_LEN + 1];		/* error token attribite */
 } TokenAttribute;
 
-/* TO_DO: Should be used if no symbol table is implemented */
+/* Should be used if no symbol table is implemented */
 typedef struct idAttibutes {
-	byte flags;			/* Flags information */
+	byte flags;							/* Flags information */
 	union {
 		entero entValue;				/* Integer value - PREVIOUSLY intValue */
 		decimal decimalValue;			/* Float value - PREVIOUSLY floatValue */
@@ -134,35 +135,30 @@ typedef struct Token {
  *  .&., .|. , .!. , SEOF.
  */
 
-/* TO_DO: Define lexeme FIXED classes */
+/* Define lexeme FIXED classes */
 /* BAR(0), HAS(1), AMP(2), UND(3), -WHT(4), -NEW(5), -ABC(6), -NUM(7), POI(8), QUO(9), -OTH(10) */
 /* These constants will be used on nextClass */
-//#define CHRCOL2 '_'
-//#define CHRCOL3 '&'
-//#define CHRCOL4 '\'
-
-
 #define CHRCOL1 '#'
 #define CHRCOL2 '&'
 #define CHRCOL3 '_'
 #define CHRCOL4 ' '
-#define CHRCOL8 '.'		//change to col 8 or change TT
-#define CHRCOL9 '\"'	//change to col 9 or change TT
+#define CHRCOL8 '.'	
+#define CHRCOL9 '\"'
 
 /* These constants will be used on VID / MID function */
 #define MNIDPREFIX '_'
 #define ENIDPREFIX '#'
 #define CNIDPREFIX '&'
 
-/* TO_DO: Error states and illegal state */
+/* Error states and illegal state */
 #define FS		100		/* Illegal state */
 #define ESNR	6		/* Error state with no retract */
 #define ESWR	7		/* Error state with retract */
 
- /* TO_DO: State transition table definition */
+ /* State transition table definition */
 #define TABLE_COLUMNS 11
 
-/* TO_DO: Transition table - type of states defined in separate table */
+/* Transition table - type of states defined in separate table */
 
 static entero transitionTable[][TABLE_COLUMNS] = {
 	/* SEOF,      #,	  &,      _,    " ",     \n,  [A-z],  [0-9],      .,      ",   other,
@@ -191,7 +187,7 @@ static entero transitionTable[][TABLE_COLUMNS] = {
 #define FSNR	1		/* accepting state with no retract */
 #define FSWR	2		/* accepting state with retract */
 
-/* TO_DO: Define list of acceptable states */
+/* Define list of acceptable states */
 static entero stateType[] = {
 	NOFS, // S0
 	NOFS, // S1
@@ -214,7 +210,7 @@ static entero stateType[] = {
 
 /*
 -------------------------------------------------
-TO_DO: Adjust your functions'definitions
+Adjust your functions'definitions
 -------------------------------------------------
 */
 
@@ -222,7 +218,7 @@ TO_DO: Adjust your functions'definitions
 entero startScanner(ReaderPointer psc_buf);
 Token tokenizer(void);
 static entero nextClass(char c);				/* character class function */
-static entero nextState(entero, char);		/* state machine function */
+static entero nextState(entero, char);			/* state machine function */
 void printToken(Token t);
 
 /*
@@ -231,7 +227,7 @@ Automata definitions
 -------------------------------------------------
 */
 
-/* TO_DO: Pointer to function (of one char * argument) returning Token */
+/* Pointer to function (of one char * argument) returning Token */
 typedef Token(*PTR_ACCFUN)(char* lexeme);
 
 /* Declare accepting states functions */
@@ -247,7 +243,7 @@ Token funcDL	(char lexeme[]);
  * If you do not want to use the typedef, the equvalent declaration is:
  */
 
-/* TO_DO: Define final state table */
+/* Define final state table */
 static PTR_ACCFUN finalStateTable[] = {
 	NULL,		/* -     [00] */
 	NULL,		/* -     [01] */
@@ -274,10 +270,10 @@ Language keywords
 -------------------------------------------------
 */
 
-/* TO_DO: Define the number of Keywords from the language */
-#define KWT_SIZE 13
+/* Define the number of Keywords from the language */
+#define KWT_SIZE 15
 
-/* TO_DO: Define the list of keywords */
+/* Define the list of keywords */
 static char* keywordTable[KWT_SIZE] = {
 	"ent",
 	"decimal",
@@ -291,7 +287,9 @@ static char* keywordTable[KWT_SIZE] = {
 	"send",
 	"print",
 	"input",
-	"when"
+	"when",
+	"AND",
+	"OR"
 };
 
 /* Number of errors */

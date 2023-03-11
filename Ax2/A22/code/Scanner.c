@@ -37,7 +37,7 @@
 ************************************************************
 */
 
-/* TO_DO: Adjust the function header */
+/* Adjust the function header */
 
  /* The #define _CRT_SECURE_NO_WARNINGS should be used in MS Visual Studio projects
   * to suppress the warnings about using "unsafe" functions like fopen()
@@ -58,7 +58,6 @@
 #include <assert.h>  /* assert() prototype */
 
 /* project header files */
-
 #ifndef COMPILERS_H_
 #include "Compilers.h"
 #endif
@@ -73,7 +72,7 @@
 
 /*
 ----------------------------------------------------------------
-TO_DO: Global vars definitions
+Global vars definitions
 ----------------------------------------------------------------
 */
 
@@ -81,7 +80,7 @@ TO_DO: Global vars definitions
 /* This buffer is used as a repository for string literals. */
 extern ReaderPointer stringLiteralTable;	/* String literal table */
 entero line;								/* Current line number of the source code */
-extern entero errorNumber;				/* Defined in platy_st.c - run-time error number */
+extern entero errorNumber;					/* Defined in platy_st.c - run-time error number */
 
 extern entero stateType[];
 extern char* keywordTable[];
@@ -98,7 +97,7 @@ static ReaderPointer sourceBuffer;			/* Pointer to input source buffer */
  *		This function initializes the scanner using defensive programming.
  ***********************************************************
  */
- /* TO_DO: Follow the standard and adjust datatypes */
+ /* Follow the standard and adjust datatypes */
 
 entero startScanner(ReaderPointer psc_buf) {
 	/* in case the buffer has been read previously  */
@@ -122,7 +121,7 @@ entero startScanner(ReaderPointer psc_buf) {
 
 Token tokenizer(void) {
 
-	/* TO_DO: Follow the standard and adjust datatypes */
+	/* Follow the standard and adjust datatypes */
 
 	Token currentToken = { 0 }; /* token to return after pattern recognition. Set all structure members to 0 */
 	char c;						/* input symbol */
@@ -143,7 +142,7 @@ Token tokenizer(void) {
 			-----------------------------------------------------------------------
 		*/
 
-		/* TO_DO: All patterns that do not require accepting functions */
+		/* All patterns that do not require accepting functions */
 		switch (c) {
 
 		/* Cases for spaces */
@@ -171,7 +170,9 @@ Token tokenizer(void) {
 		case '}':
 			currentToken.code = RBR_T;
 			return currentToken;
-
+		case ',':
+			currentToken.code = COMA_T;
+			return currentToken;
 		case '+':
 			currentToken.code = ADD_T;
 			return currentToken;
@@ -223,7 +224,7 @@ Token tokenizer(void) {
 			-----------------------------------------------------------------------
 		*/
 
-		/* TO_DO: Adjust / check the logic for your language */
+		/* Adjust / check the logic for your language */
 
 		default: // general case
 			state = nextState(state, c);
@@ -282,7 +283,7 @@ Token tokenizer(void) {
 	or #undef DEBUG is used - see the top of the file.
  ***********************************************************
  */
- /* TO_DO: Just change the datatypes */
+ /* Just change the datatypes */
 
 entero nextState(entero state, char c) {
 	entero col;
@@ -309,7 +310,7 @@ entero nextState(entero state, char c) {
 	* For instance, a letter should return the column for letters, etc.
  ***********************************************************
  */
-/* TO_DO: Use your column configuration */
+/* Use your column configuration */
 
 /* Adjust the logic to return next column in TT */
 entero nextClass(char c) {
@@ -359,7 +360,7 @@ entero nextClass(char c) {
   *   additional three dots (...) should be put in the output.
   ************************************************************
   */
-  /* TO_DO: Adjust the function for IL */
+  /* Adjust the function for IL */
 
 Token funcIL(char lexeme[]) {
 	Token currentToken = { 0 };
@@ -380,13 +381,15 @@ Token funcIL(char lexeme[]) {
 	return currentToken;
 }
 
+/*
+ ************************************************************
+ * Acceptance State Function DL (added for decimals)
+ ************************************************************
+ */
 Token funcDL(char lexeme[]) {
 	Token currentToken = { 0 };
 	decimal decimalNum;
 
-	//decimalNum = (float)atof(lexeme);
-	//currentToken.code = DECI_T;
-	//currentToken.attribute.decimalValue = decimalNum;
 	for (int i = 0; i < strlen(lexeme); i++) {
 		if (lexeme[i] == '.') {
 			decimalNum = (decimal)atof(lexeme);
@@ -394,9 +397,6 @@ Token funcDL(char lexeme[]) {
 			currentToken.attribute.decimalValue = decimalNum;
 			return currentToken;
 		}
-		/*else {
-			currentToken = (*finalStateTable[ESNR])(lexeme);
-		}*/
 	}
 	return currentToken;
 }
@@ -413,7 +413,7 @@ Token funcDL(char lexeme[]) {
  *  - Suggestion: Use "strncpy" function.
  ***********************************************************
  */
- /* TO_DO: Adjust the function for ID */
+ /* Adjust the function for ID */
 
 Token funcID(char lexeme[]) {
 	Token currentToken = { 0 };
@@ -457,7 +457,7 @@ Token funcID(char lexeme[]) {
  *   separate the lexemes. Remember also to incremente the line.
  ***********************************************************
  */
-/* TO_DO: Adjust the function for SL */
+/* Adjust the function for SL */
 
 Token funcSL(char lexeme[]) {
 	Token currentToken = { 0 };
@@ -490,7 +490,7 @@ Token funcSL(char lexeme[]) {
  * - Tip: Remember to use the keywordTable to check the keywords.
  ***********************************************************
  */
- /* TO_DO: Adjust the function for Keywords */
+ /* Adjust the function for Keywords */
 
 Token funcKEY(char lexeme[]) {
 	Token currentToken = { 0 };
@@ -519,7 +519,7 @@ Token funcKEY(char lexeme[]) {
  *   so remember to increment line.
  ***********************************************************
  */
- /* TO_DO: Adjust the function for Errors */
+ /* Adjust the function for Errors */
 
 Token funcErr(char lexeme[]) {
 	Token currentToken = { 0 };
@@ -566,7 +566,7 @@ void printToken(Token t) {
 	case ERR_T:
 		numScannerErrors++;
 		printf("ERR_T\t\t%s\n", t.attribute.errLexeme);
-		/* TO_DO: Update numScannerErrors */
+		/* Update numScannerErrors */
 		break;
 	case SEOF_T:
 		printf("SEOF_T\t\t%d\t\n", t.attribute.seofType);
@@ -595,6 +595,9 @@ void printToken(Token t) {
 		break;
 	case COM_T:
 		printf("COM_T\n");
+		break;
+	case COMA_T:
+		printf("COMA_T\n");
 		break;
 	case EOS_T:
 		printf("EOS_T\n");
@@ -633,11 +636,6 @@ void printToken(Token t) {
 		printf("LT_T\n");
 		break;
 	default:
-		//numScannerErrors++;
 		printf("Scanner error: invalid token code: %d\n", t.code);
 	}
 }
-
-/*
-TO_DO: (If necessary): HERE YOU WRITE YOUR ADDITIONAL FUNCTIONS (IF ANY).
-*/

@@ -803,7 +803,7 @@ entero readerShowStat(ReaderPointer const readerPointer) {
 *************************************************************
 */
 entero readerNumErrors(ReaderPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
+	/* Defensive programming */
 	if (!readerPointer) {
 		return READER_ERROR;
 	}
