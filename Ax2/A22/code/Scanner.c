@@ -181,7 +181,7 @@ Token tokenizer(void) {
 		case '*':
 			currentToken.code = MUL_T;
 			return currentToken;
-		/* Comments - WHAT DO WE DO HERE? */
+		/* Comments */
 		case '/':
 			newc = readerGetChar(sourceBuffer);
 			if (newc == '/') {
@@ -189,6 +189,7 @@ Token tokenizer(void) {
 					c = readerGetChar(sourceBuffer);
 					if (c == '\n' || c == CHARSEOF0 || c == CHARSEOF255) {
 						readerRetract(sourceBuffer);
+						currentToken.code = COM_T;
 						return currentToken;
 					}
 				} while (c != '\n' && c != CHARSEOF0 && c != CHARSEOF255);
@@ -206,9 +207,6 @@ Token tokenizer(void) {
 			return currentToken;
 		case '<':
 			currentToken.code = LT_T;
-			return currentToken;
-		case '.':
-			currentToken.code = POI_T;
 			return currentToken;
 		case CHARSEOF0:
 			currentToken.code = SEOF_T;
@@ -382,6 +380,27 @@ Token funcIL(char lexeme[]) {
 	return currentToken;
 }
 
+Token funcDL(char lexeme[]) {
+	Token currentToken = { 0 };
+	decimal decimalNum;
+
+	//decimalNum = (float)atof(lexeme);
+	//currentToken.code = DECI_T;
+	//currentToken.attribute.decimalValue = decimalNum;
+	for (int i = 0; i < strlen(lexeme); i++) {
+		if (lexeme[i] == '.') {
+			decimalNum = (decimal)atof(lexeme);
+			currentToken.code = DECI_T;
+			currentToken.attribute.decimalValue = decimalNum;
+			return currentToken;
+		}
+		/*else {
+			currentToken = (*finalStateTable[ESNR])(lexeme);
+		}*/
+	}
+	return currentToken;
+}
+
 /*
  ************************************************************
  * Acceptance State Function ID
@@ -399,7 +418,7 @@ Token funcIL(char lexeme[]) {
 Token funcID(char lexeme[]) {
 	Token currentToken = { 0 };
 	size_t length = strlen(lexeme);
-	char lastch = lexeme[length - 1];
+	char lastch = lexeme[0];
 	entero isID = FALSE;
 	switch (lastch) {
 		case MNIDPREFIX:
@@ -574,6 +593,9 @@ void printToken(Token t) {
 	case KEY_T:
 		printf("KW_T\t\t%s\n", keywordTable[t.attribute.codeType]);
 		break;
+	case COM_T:
+		printf("COM_T\n");
+		break;
 	case EOS_T:
 		printf("EOS_T\n");
 		break;
@@ -585,6 +607,9 @@ void printToken(Token t) {
 		break;
 	case INL_T:
 		printf("INL_T\t\t%d\t\n", (entero)t.attribute.codeType);
+		break;
+	case DECI_T:
+		printf("DECI_T\t\t%f\t\n", (decimal)t.attribute.decimalValue);
 		break;
 	case ADD_T:
 		printf("ADD_T\n");

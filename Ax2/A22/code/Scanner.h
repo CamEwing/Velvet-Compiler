@@ -82,7 +82,8 @@ enum TOKENS {
 	EQ_T,		/* 18: Equal token ( '=' ) */
 	GT_T,		/* 19: Greater-than token ( '>' ) */
 	LT_T,		/* 20: Less-than token ( '<' ) */
-	POI_T
+	COM_T,		/* 21: Comment token ( '/' ) */
+	DECI_T		/* 22: Floating point token ( '<' ) */
 };
 
 /* TO_DO: Operators token attributes */
@@ -185,19 +186,6 @@ static entero transitionTable[][TABLE_COLUMNS] = {
 	{    FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS,     FS}  // S16 - FSWR
 };
 
-//static entero transitionTable[][TABLE_COLUMNS] = {
-//	/*[A-z], [0-9],    _,    &,    ', SEOF, other
-//	   L(0),  D(1), U(2), M(3), Q(4), E(5),  O(6) */
-//	{     1,  ESNR, ESNR, ESNR,    4, ESWR, ESNR}, // S0: NOAS
-//	{     1,     1,    1,    2, ESWR, ESWR,    3}, // S1: NOAS
-//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S2: ASNR (MVID)
-//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S3: ASWR (KEY)
-//	{     4,     4,    4,    4,    5, ESWR,    4}, // S4: NOAS
-//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S5: ASNR (SL)
-//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}, // S6: ASNR (ES)
-//	{    FS,    FS,   FS,   FS,   FS,   FS,   FS}  // S7: ASWR (ER)
-//};
-
 /* Define accepting states types */
 #define NOFS	0		/* not accepting state */
 #define FSNR	1		/* accepting state with no retract */
@@ -222,15 +210,6 @@ static entero stateType[] = {
 	FSWR, // S14
 	FSNR, // S15
 	FSWR  // S16
-
-	//NOFS, /* 00 */
-	//NOFS, /* 01 */
-	//FSNR, /* 02 (MID) - Methods */
-	//FSWR, /* 03 (KEY) */
-	//NOFS, /* 04 */
-	//FSNR, /* 05 (SL) */
-	//FSNR, /* 06 (Err1 - no retract) */
-	//FSWR  /* 07 (Err2 - retract) */
 };
 
 /*
@@ -261,6 +240,7 @@ Token funcID	(char lexeme[]);
 Token funcKEY	(char lexeme[]);
 Token funcErr	(char lexeme[]);
 Token funcIL	(char lexeme[]);
+Token funcDL	(char lexeme[]);
 
 /* 
  * Accepting function (action) callback table (array) definition 
@@ -279,7 +259,7 @@ static PTR_ACCFUN finalStateTable[] = {
 	NULL,		/* -     [07] */
 	funcIL,		/* INL_T [08] - Integer Literal */
 	NULL,		/* -	 [09] */
-	funcIL,		/* INL_T [10] - Decimal Literal ??? */
+	funcDL,		/* INL_T [10] - Decimal Literal */
 	NULL,		/* -     [11] */
 	funcSL,		/* STR_T [12] - String Literal */
 	NULL,		/* -     [13]  */
@@ -295,7 +275,7 @@ Language keywords
 */
 
 /* TO_DO: Define the number of Keywords from the language */
-#define KWT_SIZE 12
+#define KWT_SIZE 13
 
 /* TO_DO: Define the list of keywords */
 static char* keywordTable[KWT_SIZE] = {
@@ -310,10 +290,9 @@ static char* keywordTable[KWT_SIZE] = {
 	"false",
 	"send",
 	"print",
-	"input"
+	"input",
+	"when"
 };
-
-
 
 /* Number of errors */
 entero numScannerErrors;
