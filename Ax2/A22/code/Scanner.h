@@ -63,7 +63,7 @@
 enum TOKENS {
 	ERR_T,		/*  0: Error token */
 	MNID_T,		/*  1: Method name identifier token (start: _ ) */
-	STR_T,		/*  2: String literal token */
+	CHN_T,		/*  2: String literal token */
 	LPR_T,		/*  3: Left parenthesis token ( '(' ) */
 	RPR_T,		/*  4: Right parenthesis token ( ')' ) */
 	LBR_T,		/*  5: Left brace token ( '{' ) */
@@ -72,8 +72,9 @@ enum TOKENS {
 	EOS_T,		/*  8: End of statement ( ';' ) */
 	ENID_T,		/*  9: Variable name identifier for entero & decimal (start: #) */
 	CNID_T,		/* 10: Variable name identifier for chain (start: &) */
+	DECI_T,		/* 22: Floating point token contains ( '.' ) */
 	RTE_T,		/* 11: Run-time error token */
-	INL_T,		/* 12: Integer literal token */
+	ENL_T,		/* 12: Enteger literal token */
 	SEOF_T,		/* 13: Source end-of-file token */
 	ADD_T,		/* 14: Addition token ( '+' ) */
 	SUB_T,		/* 15: Subtraction token ( '-' ) */
@@ -83,8 +84,10 @@ enum TOKENS {
 	GT_T,		/* 19: Greater-than token ( '>' ) */
 	LT_T,		/* 20: Less-than token ( '<' ) */
 	COM_T,		/* 21: Comment token ( '/' ) */
-	DECI_T,		/* 22: Floating point token ( '.' ) */
 	COMA_T		/* 25: Comma token ( ',' ) */
+
+// Make single operator for ArithmeticOperators, RelationalOperators
+// and use currentToken.attribute.arithmeticOperator to differentiate in tokenizer
 };
 
 /* Operators token attributes */
@@ -253,11 +256,11 @@ static PTR_ACCFUN finalStateTable[] = {
 	NULL,		/* -     [05]  */
 	funcID,		/* MNID  [06] - Method Name ID */
 	NULL,		/* -     [07] */
-	funcIL,		/* INL_T [08] - Integer Literal */
+	funcIL,		/* ENL_T [08] - Integer Literal */
 	NULL,		/* -	 [09] */
-	funcDL,		/* INL_T [10] - Decimal Literal */
+	funcDL,		/* DECI_T[10] - Decimal Literal */
 	NULL,		/* -     [11] */
-	funcSL,		/* STR_T [12] - String Literal */
+	funcSL,		/* CHN_T [12] - String Literal */
 	NULL,		/* -     [13]  */
 	funcKEY,	/* KEY_T [14] - Keywords */
 	funcErr,	/* ERR1	 [15] - Error No Return */

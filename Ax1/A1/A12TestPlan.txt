@@ -9,7 +9,8 @@ typing A12.bat into the command line.
 In order to run the executable, navigate to the same folder as above A12/out/x64-debug. Typing into
 the command line the following format: Velvet.exe {R/S/P} {input file} {mode} {size} {increment}
  
-Velvet.exe {R/S/P} {input file} {mode} {size} {increment}
+Reader:
+Velvet.exe R {input file} {mode} {size} {increment}
 
 Velvet.exe:	Calls the executable file for the compiler.
 R/S/P:		R = Reader, S = Scanner, P = Parser, The options for different stages of the compiler.
@@ -19,3 +20,15 @@ Size:		Manually enter the starting size of the buffer.
 Increment:	Manually choose the constant increment of the buffer.
 
 Example:	Velvet.exe R README.txt A 100 10
+
+Scanner:
+Velvet.exe S {input file}
+
+Velvet.exe:	Calls the executable file for the compiler.
+R/S/P:		R = Reader, S = Scanner, P = Parser, The options for different stages of the compiler.
+Input File:	The file to be compiled.
+Mode:		F = Fixed, A = Addit, M = Multi, The reader mode for incrementing the buffer size.
+Size:		Manually enter the starting size of the buffer.
+Increment:	Manually choose the constant increment of the buffer.
+
+Example:	Velvet.exe S README.txt
