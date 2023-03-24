@@ -208,6 +208,9 @@ Token tokenizer(void) {
 			currentToken.code = EQ_T;
 			currentToken.attribute.relationalOperator = OP_EQ;
 			return currentToken;
+
+			//Add '==' operator
+
 		case '>': //Relational Ops
 			currentToken.code = GT_T;
 			currentToken.attribute.relationalOperator = OP_GT;
@@ -378,7 +381,7 @@ Token funcIL(char lexeme[]) {
 	else {
 		tlong = atol(lexeme);
 		if (tlong >= 0 && tlong <= SHRT_MAX) {
-			currentToken.code = INL_T;
+			currentToken.code = ENL_T;
 			currentToken.attribute.entValue = (entero)tlong;
 		}
 		else {
@@ -425,9 +428,9 @@ Token funcDL(char lexeme[]) {
 Token funcID(char lexeme[]) {
 	Token currentToken = { 0 };
 	size_t length = strlen(lexeme);
-	char lastch = lexeme[0];
+	char firstch = lexeme[0];
 	entero isID = FALSE;
-	switch (lastch) {
+	switch (firstch) {
 		case MNIDPREFIX:
 			currentToken.code = MNID_T;
 			isID = TRUE;
@@ -486,7 +489,7 @@ Token funcSL(char lexeme[]) {
 		errorNumber = RTE_CODE;
 		return currentToken;
 	}
-	currentToken.code = STR_T;
+	currentToken.code = CHN_T;
 	return currentToken;
 }
 
@@ -582,8 +585,8 @@ void printToken(Token t) {
 	case MNID_T:
 		printf("MNID_T\t\t%s\n", t.attribute.idLexeme);
 		break;
-	case STR_T:
-		printf("STR_T\t\t%d\t ", (entero)t.attribute.codeType);
+	case CHN_T:
+		printf("CHN_T\t\t%d\t ", (entero)t.attribute.codeType);
 		printf("%s\n", readerGetContent(stringLiteralTable, (entero)t.attribute.codeType));
 		break;
 	case LPR_T:
@@ -616,8 +619,8 @@ void printToken(Token t) {
 	case CNID_T:
 		printf("CNID_T\t\t%s\n", t.attribute.idLexeme);
 		break;
-	case INL_T:
-		printf("INL_T\t\t%d\t\n", (entero)t.attribute.codeType);
+	case ENL_T:
+		printf("ENL_T\t\t%d\t\n", (entero)t.attribute.codeType);
 		break;
 	case DECI_T:
 		printf("DECI_T\t\t%f\t\n", (decimal)t.attribute.decimalValue);
