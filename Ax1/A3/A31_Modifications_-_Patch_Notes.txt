@@ -1,0 +1,26 @@
+A21 Modifications
+
+- Removed multi-line comments for the sake of simplicity; single line comments will suffice.
+- Our chain variable (string equivalent) will only accept letters, numbers, and spaces.
+- Removed constants from our language altogether.
+
+
+A22 Modifications
+
+- Removed the following keywords as they are no longer necessary; 'method', 'struct', 'close', 'cast'.
+- Added a statement delimiter (';') as opposed to using indentation to structure our code.
+- Added braces ('{', '}') to signify blocks of code.
+- Removed logical operators from our language ('!', '&', '|').
+- Removed *SOME* relational operators ('<=', '>=').
+- In order to declare a decimal, there MUST be a number preceding the decimal point (i.e. '0.123').
+
+A31 Modifications
+
+Velvet is an all-purpose language with an emphasis on ‘Keeping It Simple Student’. We have created this language
+to be easy for beginner programmers to learn, using simple and straightforward syntax while maintaining the basic 
+principles of programming. We made the following changes to our language in order to reinforce the KISS philosophy:
+
+- Comments can now read most ASCII characters (as opposed to only reading letters, numbers and whitespace).
+- Added new keywords for logical operations (AND, OR).
+- Added ART_OP_T to act as a single token for all arithmetic operations.
+- Added REL_OP_T to act as a single token for all relational operations (we are also adding equal-to (or '==') to the relational operators).

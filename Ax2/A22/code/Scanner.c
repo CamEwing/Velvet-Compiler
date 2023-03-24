@@ -508,6 +508,7 @@ Token funcKEY(char lexeme[]) {
 	if (kwindex != -1) {
 		currentToken.code = KEY_T;
 		currentToken.attribute.codeType = kwindex;
+		//currentToken.attribute.keywordIndex = kwindex;
 	}
 	else {
 		currentToken = funcErr(lexeme);
