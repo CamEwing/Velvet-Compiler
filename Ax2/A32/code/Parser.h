@@ -2,34 +2,25 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Winter, 2023
-* Author: TO_DO
+* Author: Megan Clinch 041043369, Cameron Ewing 041037946
 * Professors: Paulo Sousa
 ************************************************************
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@                                                               @@@@
-@@          /       ==============================        /          @@
-@         ////           @@       @@ #@                  ////         @
-@         ////*          @@ @%  @ @@    @@  @ #@#       /////         @
-@     ((( ////))))   @@  @% @%  @ @@ #@ @@  @ #@@#   ///////( ///     @
-@     ((((,/ )))))    @@@@   @@@  @@ ##  @@@   #@#   ///// ,/////     @
-@     (((((/)))((    ------------------------------    ((((./////*    @
-@    //*./ /  .///   ---  PROGRAMMING LANGUAGE  ---  ////   / ( (//   @
-@    ///// / /////   ==============================  * ////* / ////   @
-@     ///// ///// ((                               (( ///// /////     @
-@    ((((   / , (((((                             (((((  //   /(((    @
-@    (((((((/ . (((((                          (((((* / (((((((       @
-@      (((((( //((((/((((                    *((((/((((/( (((((/      @
-@       .//,   * /   (((((                   (((((  ///    .//.       @
-@     ,////////./(  (((((* ////         (///(((((( ,/(,////////       @
-@         //////// ,// ((( /////,     ////// ((( //  /////// *        @
-@            (((((((((,// * /////     /////   (//(((((((((            @
-@            ((((((((((((/////         //.///  (((((((((((.           @
-@                   (///////// //(   (//.//////////                   @
-@                  (/////////             //////////                  @
+@@@																	@@@
+@@																	 @@
+@	  __   __   ______     __         __   __   ______     ______	  @
+@    /\ \ / /  /\  ___\   /\ \       /\ \ / /  /\  ___\   /\__  _\    @
+@	 \ \ \'/   \ \  __\   \ \ \____  \ \ \'/   \ \  __\   \/_/\ \/    @
+@	  \ \__|    \ \_____\  \ \_____\  \ \__|    \ \_____\    \ \_\    @
+@  	   \/_/      \/_____/   \/_____/   \/_/      \/_____/     \/_/    @
+@																	  @
 @                                                                     @
-@@          A L G O N Q U I N   C O L L E G E  -  2 0 2 3 W          @@
-@@@@                                                               @@@@
+@           A L G O N Q U I N   C O L L E G E  -  2 0 2 3 W           @
+@@																     @@
+@@@					M E G A N   &   C A M E R O N					@@@
+@@@@															   @@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
@@ -67,49 +58,99 @@
 /* Global vars */
 static Token lookahead;
 extern BufferReader* stringLiteralTable;
-extern julius_intg line;
+extern entero line;
 extern Token tokenizer();
-extern julius_char* keywordTable[];
-julius_intg syntaxErrorNumber = 0;
+extern char* keywordTable[];
+entero syntaxErrorNumber = 0;
 
-#define STR_LANGNAME	"Julius"
-#define LANG_WRTE		"print&"
-#define LANG_READ		"input&"
-#define LANG_MAIN		"main&"
+#define STR_LANGNAME	"Velvet"
+#define LANG_WRTE		"print"
+#define LANG_READ		"input"
+#define LANG_MAIN		"_main"
 
 /* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
 
 /* Constants */
 enum KEYWORDS {
+	//KW_data,
+	//KW_code,
+
 	NO_ATTR = -1,
-	KW_data,
-	KW_code,
-	KW_int,
-	KW_real,
-	KW_string,
+	KW_ent,
+	KW_decimal,
+	KW_chain,
 	KW_if,
-	KW_then,
+	KW_elseif,
 	KW_else,
-	KW_while,
-	KW_do
+	KW_for,
+	KW_true,
+	KW_false,
+	KW_send,
+	KW_print,
+	KW_input,
+	KW_when,
+	KW_AND,
+	KW_OR
 };
 
 /* Function definitions */
-julius_void startParser();
-julius_void matchToken(julius_intg, julius_intg);
-julius_void syncErrorHandler(julius_intg);
-julius_void printError();
+void startParser();
+void matchToken(entero, entero);
+void syncErrorHandler(entero);
+void printError();
 
 /* TO_DO: Place ALL non-terminal function declarations */
-julius_void codeSession();
-julius_void dataSession();
-julius_void optVarListDeclarations();
-julius_void optionalStatements();
-julius_void outputStatement();
-julius_void outputVariableList();
-julius_void program();
-julius_void statement();
-julius_void statements();
-julius_void statementsPrime();
+void program();
+void opt_data_declarations();
+void varlist_declarations();
+void varlist_declarationPrime();
+void varlist_declaration();
+void entero_varlist_declaration();
+void decimal_varlist_declaration();
+void chain_varlist_declaration();
+
+void entero_variable();
+void decimal_variable();
+void chain_variable();
+
+void opt_code_statements();
+void statements();
+void statementsPrime();
+void statement();
+void assignment_statement();
+
+void assignment_expression();
+void selection_statement();
+void iteration_statement();
+void input_statement();
+void variable_list();
+void variable_identifies();
+void output_statement();
+void opt_variable_list();
+void arithmetic_expression();
+void unary_arithmetic_expression();
+void arithmetic_expressions_ADD_SUB();
+void arithmetic_expressions_MUL_DIV();
+void primary_arithmetic_expression();
+void chain_expression();
+void conditional_expression();
+void logical_AND_expression();
+void logical_OR_expression();
+void relational_expression();
+void relational_a_expression();
+void relational_s_expression();
+void primary_a_relational_expression();
+void primary_s_relational_expression();
+
+//void codeSession();
+//void dataSession();
+//void optVarListDeclarations();
+//void optionalStatements();
+//void outputStatement();
+//void outputVariableList();
+//void program();
+//void statement();
+//void statements();
+//void statementsPrime();
 
 #endif

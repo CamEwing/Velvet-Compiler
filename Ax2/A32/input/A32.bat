@@ -1,8 +1,8 @@
 :: COMPILERS COURSE - SCRIPT ---------------------------------------------
-:: SCRIPT A32 - CST8152 - Winter 2023
+:: SCRIPT A22 - CST8152 - Winter 2023
 
 CLS
-SET COMPILER=Julius.exe
+SET COMPILER=Velvet.exe
 
 SET FILE1=INPUT0_Empty
 SET FILE2=INPUT1_Hello
@@ -11,15 +11,15 @@ SET FILE4=INPUT3_Factorial
 SET FILE5=INPUT4_Datatypes
 SET FILE6=INPUT5_General
 
-SET ASSIGNMENT=A32
-SET EXTENSION=jul
+SET ASSIGNMENT=A22
+SET EXTENSION=vlt
 SET OUTPUT=out
 SET ERROR=err
 
-SET PARAM=P
+SET PARAM=S
 
 :: ---------------------------------------------------------------------
-:: Begin of Tests (A32 - W22) ------------------------------------------
+:: Begin of Tests (A22 - W22) ------------------------------------------
 :: ---------------------------------------------------------------------
 
 @echo off
@@ -51,7 +51,7 @@ ECHO "@@          A L G O N Q U I N   C O L L E G E  -  2 0 2 3 W          @@"
 ECHO "@@@@                                                               @@@@"
 ECHO "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 ECHO "                                                                       "
-ECHO "[PARSER SCRIPT .......................................................]"
+ECHO "[SCANNER SCRIPT ......................................................]"
 ECHO "                                                                       "
 
 ren *.exe %COMPILER%
@@ -59,7 +59,7 @@ ren *.exe %COMPILER%
 ::
 :: BASIC TESTS  ----------------------------------------------------------
 ::
-:: Basic Tests (A32 - W22) - - - - - - - - - - - - - - - - - - - - - -
+:: Basic Tests (A22 - W22) - - - - - - - - - - - - - - - - - - - - - -
 
 %COMPILER% %PARAM% %FILE1%.%EXTENSION%	> %FILE1%-%ASSIGNMENT%.%OUTPUT%	2> %FILE1%-%ASSIGNMENT%.%ERROR%
 %COMPILER% %PARAM% %FILE2%.%EXTENSION%	> %FILE2%-%ASSIGNMENT%.%OUTPUT%	2> %FILE2%-%ASSIGNMENT%.%ERROR%
@@ -73,5 +73,5 @@ DIR *.OUT
 DIR *.ERR
 
 :: ---------------------------------------------------------------------
-:: End of Tests (A32 - W22) --------------------------------------------
+:: End of Tests (A22 - W22) --------------------------------------------
 :: ---------------------------------------------------------------------

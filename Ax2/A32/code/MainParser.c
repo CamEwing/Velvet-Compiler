@@ -1,22 +1,27 @@
 /*
 ************************************************************
 * COMPILERS COURSE - Algonquin College
-* Code version: Fall, 2022
-* Author: Svillen Ranev - Paulo Sousa
+* Code version: Winter, 2023
+* Author: Megan Clinch 041043369, Cameron Ewing 041037946
 * Professors: Paulo Sousa
 ************************************************************
- _________________________________
-|                                 |
-| ........ BOA LANGUAGE ......... |
-|     __    __    __    __        |
-|    /  \  /  \  /  \  /  \       |
-| __/  __\/  __\/  __\/  __\__    |
-| _/  /__/  /__/  /__/  /_____|   |
-|  \_/ \   / \   / \   / \  \___  |
-|       \_/   \_/   \_/   \___o_> |
-|                                 |
-| .. ALGONQUIN COLLEGE - 2022F .. |
-|_________________________________|
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@                                                               @@@@
+@@@																	@@@
+@@																	 @@
+@	  __   __   ______     __         __   __   ______     ______	  @
+@    /\ \ / /  /\  ___\   /\ \       /\ \ / /  /\  ___\   /\__  _\    @
+@	 \ \ \'/   \ \  __\   \ \ \____  \ \ \'/   \ \  __\   \/_/\ \/    @
+@	  \ \__|    \ \_____\  \ \_____\  \ \__|    \ \_____\    \ \_\    @
+@  	   \/_/      \/_____/   \/_____/   \/_/      \/_____/     \/_/    @
+@																	  @
+@                                                                     @
+@           A L G O N Q U I N   C O L L E G E  -  2 0 2 3 W           @
+@@																     @@
+@@@					M E G A N   &   C A M E R O N					@@@
+@@@@															   @@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 */
 
@@ -80,11 +85,11 @@
  /* Global objects - variables */
 static ReaderPointer sourceBuffer; /* pointer to input (source) buffer */
 ReaderPointer stringLiteralTable; /* This buffer is used as a repository for string literals */
-julius_intg errorNumber;     /* Run-time error number = 0 by default (ANSI) */
+entero errorNumber;     /* Run-time error number = 0 by default (ANSI) */
 
 /* External objects */
-extern julius_intg syntaxErrorNumber /* number of syntax errors reported by the parser */;
-extern julius_intg line; /* source code line number - defined in scanner.c */
+extern entero syntaxErrorNumber /* number of syntax errors reported by the parser */;
+extern entero line; /* source code line number - defined in scanner.c */
 
 /*
  * -------------------------------------------------------------
@@ -93,13 +98,13 @@ extern julius_intg line; /* source code line number - defined in scanner.c */
  */
 
  /* Function declarations (prototypes) */
-extern julius_void startParser(julius_void);
-extern julius_intg startScanner(ReaderPointer sc_buf);
+extern void startParser(void);
+extern entero startScanner(ReaderPointer sc_buf);
 
-static julius_void printParserError(julius_char* fmt, ...);
-static julius_void displayParser(ReaderPointer ptrBuffer);
-static julius_long getParserFileSize(julius_char* fname);
-static julius_void callGarbageCollector(julius_void);
+static void printParserError(char* fmt, ...);
+static void displayParser(ReaderPointer ptrBuffer);
+static long getParserFileSize(char* fname);
+static void callGarbageCollector(void);
 
 
 /*
@@ -112,10 +117,10 @@ static julius_void callGarbageCollector(julius_void);
 ***********************************************************
 */
 
-julius_intg mainParser(julius_intg argc, julius_char** argv) {
+entero mainParser(entero argc, char** argv) {
 
 	FILE* fi;       /* input file handle */
-	julius_intg loadsize = 0; /*the size of the file loaded in the buffer */
+	entero loadsize = 0; /*the size of the file loaded in the buffer */
 
 	/*check for correct arrguments - source file name */
 	if (argc <= 1) {
@@ -190,12 +195,12 @@ julius_intg mainParser(julius_intg argc, julius_char** argv) {
 ************************************************************
 */
 
-julius_void printParserError(julius_char* fmt, ...) {
+void printParserError(char* fmt, ...) {
 
 	va_list ap;
 	va_start(ap, fmt);
 
-	(julius_void)vfprintf(stderr, fmt, ap);
+	(void)vfprintf(stderr, fmt, ap);
 	va_end(ap);
 
 	/* Move to new line */
@@ -213,9 +218,9 @@ julius_void printParserError(julius_char* fmt, ...) {
 ************************************************************
 */
 
-julius_long getParserFileSize(julius_char* fname) {
+long getParserFileSize(char* fname) {
 	FILE* input;
-	julius_long flength;
+	long flength;
 	input = fopen(fname, "r");
 	if (input == NULL) {
 		printParserError("%s%s", "Cannot open file: ", fname);
@@ -235,7 +240,7 @@ julius_long getParserFileSize(julius_char* fname) {
 ************************************************************
 */
 
-julius_void displayParser(ReaderPointer ptrBuffer) {
+void displayParser(ReaderPointer ptrBuffer) {
 	printf("\nPrinting input buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n", readerGetSize(ptrBuffer));
 	printf("The current size of the buffer is:  %d\n", readerGetPosWrte(ptrBuffer));
@@ -251,7 +256,7 @@ julius_void displayParser(ReaderPointer ptrBuffer) {
 ************************************************************
 */
 
-julius_void callGarbageCollector(julius_void) {
+void callGarbageCollector(void) {
 	if (syntaxErrorNumber)
 		printf("\nSyntax errors: %d\n", syntaxErrorNumber);
 	printf("\nCollecting garbage...\n");

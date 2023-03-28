@@ -1,0 +1,5 @@
+// Velvet Example 2: the program is "lexically" correct and should not generate any errors
+
+_main() {
+	print("Hello world");
+}

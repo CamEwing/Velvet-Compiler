@@ -1,6 +1,6 @@
-# Julius Example 3:
-  Volume of a sphere #
-main& {
+// Velvet - Example 3: volume of a sphere
+
+main() {
 	data {
 		real PI%, r%, Vol%;
 	}
