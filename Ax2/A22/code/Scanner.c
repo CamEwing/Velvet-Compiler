@@ -174,15 +174,15 @@ Token tokenizer(void) {
 			currentToken.code = COMA_T;
 			return currentToken;
 		case '+':
-			currentToken.code = ADD_T;
+			currentToken.code = ART_OP_T;
 			currentToken.attribute.arithmeticOperator = OP_ADD;
 			return currentToken;
 		case '-':
-			currentToken.code = SUB_T;
+			currentToken.code = ART_OP_T;
 			currentToken.attribute.arithmeticOperator = OP_SUB;
 			return currentToken;
 		case '*':
-			currentToken.code = MUL_T;
+			currentToken.code = ART_OP_T;
 			currentToken.attribute.arithmeticOperator = OP_MUL;
 			return currentToken;
 		/* Comments */
@@ -200,23 +200,31 @@ Token tokenizer(void) {
 			}
 			else {
 				readerRetract(sourceBuffer);
-				currentToken.code = DIV_T;
+				currentToken.code = ART_OP_T;
 				currentToken.attribute.arithmeticOperator = OP_DIV;
 				return currentToken;
 			}
 		case '=':
-			currentToken.code = EQ_T;
-			currentToken.attribute.relationalOperator = OP_EQ;
-			return currentToken;
-
+			newc = readerGetChar(sourceBuffer);
+			if (newc == '=') {
+				currentToken.code = REL_OP_T;
+				currentToken.attribute.arithmeticOperator = OP_EQ;
+				return currentToken;
+			}
+			else {
+				currentToken.code = EQ_T;
+				return currentToken;
+			}
 			//Add '==' operator
 
 		case '>': //Relational Ops
-			currentToken.code = GT_T;
+			//currentToken.code = GT_T;
+			currentToken.code = REL_OP_T;
 			currentToken.attribute.relationalOperator = OP_GT;
 			return currentToken;
 		case '<':
-			currentToken.code = LT_T;
+			//currentToken.code = LT_T;
+			currentToken.code = REL_OP_T;
 			currentToken.attribute.relationalOperator = OP_LT;
 			return currentToken;
 		case CHARSEOF0:
@@ -625,27 +633,42 @@ void printToken(Token t) {
 	case DECI_T:
 		printf("DECI_T\t\t%f\t\n", (decimal)t.attribute.decimalValue);
 		break;
-	case ADD_T:
-		printf("ADD_T\n");
+
+	case ART_OP_T:
+		switch (t.attribute.arithmeticOperator) {
+		case 0:
+			printf("OP_ADD\n");
+			break;
+		case 1:
+			printf("OP_SUB\n");
+			break;
+		case 2:
+			printf("OP_MUL\n");
+			break;
+		case 3:
+			printf("OP_DIV\n");
+			break;
+		}
 		break;
-	case SUB_T:
-		printf("SUB_T\n");
-		break;
-	case MUL_T:
-		printf("MUL_T\n");
-		break;
-	case DIV_T:
-		printf("DIV_T\n");
-		break;
+
 	case EQ_T:
 		printf("EQ_T\n");
 		break;
-	case GT_T:
-		printf("GT_T\n");
+
+	case REL_OP_T:
+		switch (t.attribute.relationalOperator) {
+		case 0:
+			printf("OP_EQ\n");
+			break;
+		case 1:
+			printf("OP_GT\n");
+			break;
+		case 2:
+			printf("OP_LT\n");
+			break;
+		}
 		break;
-	case LT_T:
-		printf("LT_T\n");
-		break;
+
 	default:
 		printf("Scanner error: invalid token code: %d\n", t.code);
 	}

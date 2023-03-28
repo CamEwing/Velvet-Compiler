@@ -76,13 +76,19 @@ enum TOKENS {
 	RTE_T,		/* 11: Run-time error token */
 	ENL_T,		/* 12: Enteger literal token */
 	SEOF_T,		/* 13: Source end-of-file token */
-	ADD_T,		/* 14: Addition token ( '+' ) */
-	SUB_T,		/* 15: Subtraction token ( '-' ) */
-	MUL_T,		/* 16: Multiplication token ( '*' ) */
-	DIV_T,		/* 17: Division token ( '/' ) */
-	EQ_T,		/* 18: Equal token ( '=' ) */
-	GT_T,		/* 19: Greater-than token ( '>' ) */
-	LT_T,		/* 20: Less-than token ( '<' ) */
+
+	ART_OP_T,
+	//ADD_T,		/* 14: Addition token ( '+' ) */
+	//SUB_T,		/* 15: Subtraction token ( '-' ) */
+	//MUL_T,		/* 16: Multiplication token ( '*' ) */
+	//DIV_T,		/* 17: Division token ( '/' ) */
+
+	EQ_T,		/* 18: Equal token / Assignment Token ( '=' ) */
+
+	REL_OP_T,
+	//GT_T,		/* 19: Greater-than token ( '>' ) */
+	//LT_T,		/* 20: Less-than token ( '<' ) */
+
 	COM_T,		/* 21: Comment token ( '/' ) */
 	COMA_T		/* 25: Comma token ( ',' ) */
 
@@ -92,7 +98,7 @@ enum TOKENS {
 
 /* Operators token attributes */
 typedef enum ArithmeticOperators { OP_ADD, OP_SUB, OP_MUL, OP_DIV } AriOperator;
-typedef enum RelationalOperators { OP_EQ, OP_NE, OP_GT, OP_LT } RelOperator;
+typedef enum RelationalOperators { OP_EQ, OP_GT, OP_LT } RelOperator;
 typedef enum SourceEndOfFile { SEOF_0, SEOF_255 } EofOperator;
 
 /* Data structures for declaring the token and its attributes */
