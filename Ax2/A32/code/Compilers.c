@@ -60,6 +60,10 @@
 entero main(entero argc, char** argv) {
 	entero i;
 	char option;
+	//argc = 3;
+	//argv[0] = "Velvet.exe";
+	//argv[1] = 'S';
+	//argv[2] = "TestMe.txt";
 	printLogo();
 	if (DEBUG) {
 		for (i = 0; i < argc; ++i)
@@ -84,10 +88,10 @@ entero main(entero argc, char** argv) {
 		mainScanner(argc, argv);
 		break;
 	
-	case PGM_PARSER:
-		printf("%s%c%s", "\n[Option '", PGM_PARSER, "': Starting PARSER .....]\n\n");
-		mainParser(argc, argv);
-		break;
+	//case PGM_PARSER:
+	//	printf("%s%c%s", "\n[Option '", PGM_PARSER, "': Starting PARSER .....]\n\n");
+	//	mainParser(argc, argv);
+	//	break;
 	
 	default:
 		printf("%s%c%s%c%s%c%s", "* OPTIONS:\n- [",
