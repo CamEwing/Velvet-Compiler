@@ -90,8 +90,9 @@ void matchToken(entero tokenCode, entero tokenAttribute) {
 			syntaxErrorNumber++;
 		}
 	}
-	else
+	else {
 		syncErrorHandler(tokenCode);
+	}
 }
 
 /*
@@ -155,7 +156,7 @@ void printError() {
 		printf("RBR_T\n");
 		break;
 	case KEY_T:
-		printf("KW_T\t\t%s\n", keywordTable[t.attribute.codeType]);
+		printf("KEY_T\t\t%s\n", keywordTable[t.attribute.codeType]);
 		break;
 	case COM_T:
 		printf("COM_T\n");
@@ -213,36 +214,6 @@ void printError() {
 			break;
 		}
 		break;
-	//case ERR_T:
-	//	printf("*ERROR*: %s\n", t.attribute.errLexeme);
-	//	break;
-	//case SEOF_T:
-	//	printf("SEOF_T\t\t%d\t\n", t.attribute.seofType);
-	//	break;
-	//case MNID_T:
-	//	printf("MNID_T:\t\t%s\t\n", t.attribute.idLexeme);
-	//	break;
-	//case CHN_T:
-	//	printf("CHN_T: %s\n", readerGetContent(stringLiteralTable, t.attribute.contentString));
-	//	break;
-	//case KEY_T:
-	//	printf("KEY_T: %s\n", keywordTable[t.attribute.codeType]);
-	//	break;
-	//case LPR_T:
-	//	printf("LPR_T\n");
-	//	break;
-	//case RPR_T:
-	//	printf("RPR_T\n");
-	//	break;
-	//case LBR_T:
-	//	printf("LBR_T\n");
-	//	break;
-	//case RBR_T:
-	//	printf("RBR_T\n");
-	//	break;
-	//case EOS_T:
-	//	printf("NA\n");
-	//	break;
 	default:
 		printf("%s%s%d\n", STR_LANGNAME, ": Scanner error: invalid token code: ", t.code);
 	}
@@ -257,16 +228,19 @@ void printError() {
  */
 void program() {
 	switch (lookahead.code) {
+	//case COM_T:			//Can't run comments, tf?
+	//	matchToken(COM_T, NO_ATTR);
+	//	break;
 	case MNID_T:
+		printf("You got here, good job!");
 		if (strncmp(lookahead.attribute.idLexeme, LANG_MAIN, 5) == 0) {
+			matchToken(MNID_T, NO_ATTR);
 			matchToken(LPR_T, NO_ATTR);
 			matchToken(RPR_T, NO_ATTR);
 			matchToken(LBR_T, NO_ATTR);
 
-			while(lookahead.code != RBR_T) {
-				opt_data_declarations();
-				optionalStatements();
-			}
+			decision_maker();
+
 
 			matchToken(RBR_T, NO_ATTR);
 			//matchToken(MNID_T, NO_ATTR);
@@ -277,6 +251,7 @@ void program() {
 			break;
 		}
 		else {
+			printf("you shouldn't be here");
 			printError();
 		}
 	case SEOF_T:
@@ -286,6 +261,18 @@ void program() {
 		printError();
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Program parsed");
+}
+
+void decision_maker() {
+	while (lookahead.code != RBR_T) {
+		if (lookahead.attribute.codeType == 0 || lookahead.attribute.codeType == 1 || lookahead.attribute.codeType == 2) {
+			variable_declaration();
+		}
+		else {
+			opt_code_statements();
+		}
+
+	}
 }
 
 /*
@@ -310,12 +297,65 @@ void program() {
  * FIRST(<opt_varlist_declarations>) = { e, KEY_T (KW_int), KEY_T (KW_real), KEY_T (KW_string)}.
  ***********************************************************
  */
-void opt_data_declarations() {
+void variable_declaration() {
 	switch (lookahead.code) {
+	case(KEY_T):
+		switch (lookahead.attribute.codeType) {
+		case(KW_ent):
+			matchToken(KEY_T, KW_ent);
+			matchToken(ENID_T, NO_ATTR);
+			switch (lookahead.code) {
+			case(EQ_T):
+				matchToken(EQ_T, NO_ATTR);
+				matchToken(ENL_T, NO_ATTR);
+				matchToken(EOS_T, NO_ATTR);
+				printf("%s: Initializing Entero\n", STR_LANGNAME);
+				break;
+
+			case(EOS_T):
+				matchToken(EOS_T, NO_ATTR);
+				printf("%s: Declaring Entero\n", STR_LANGNAME);
+				break;
+			}
+			break;
+		case(KW_decimal):
+			matchToken(KEY_T, KW_decimal);
+			matchToken(ENID_T, NO_ATTR);
+			switch (lookahead.code) {
+			case(EQ_T):
+				matchToken(EQ_T, NO_ATTR);
+				matchToken(DECI_T, NO_ATTR);
+				matchToken(EOS_T, NO_ATTR);
+				printf("%s: Initializing Decimal\n", STR_LANGNAME);
+				break;
+			case(EOS_T):
+				matchToken(EOS_T, NO_ATTR);
+				printf("%s: Declaring Decimal\n", STR_LANGNAME);
+				break;
+			}
+			break;
+		case(KW_chain):
+			matchToken(KEY_T, KW_chain);
+			matchToken(CNID_T, NO_ATTR);
+			switch (lookahead.code) {
+			case(EQ_T):
+				matchToken(EQ_T, NO_ATTR);
+				matchToken(CHN_T, NO_ATTR);
+				matchToken(EOS_T, NO_ATTR);
+				printf("%s: Initializing Chain\n", STR_LANGNAME);
+				break;
+			case(EOS_T):
+				matchToken(EOS_T, NO_ATTR);
+				printf("%s: Declaring Chain\n", STR_LANGNAME);
+				break;
+			}
+			break;
+		default:
+			;
+		}
 	default:
 		; // Empty
 	}
-	printf("%s%s\n", STR_LANGNAME, ": Optional Variable List Declarations parsed");
 }
 
 /*
@@ -343,12 +383,22 @@ void opt_data_declarations() {
  *				KEY_T(KW_while), MNID_T(print&), MNID_T(input&) }
  ***********************************************************
  */
-void optionalStatements() {
+void opt_code_statements() {
 	switch (lookahead.code) {
 	case MNID_T:
 		if ((strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) ||
 			(strncmp(lookahead.attribute.idLexeme, LANG_READ, 6) == 0)) {
 			statements();
+			break;
+		}
+	case KEY_T:
+		switch (lookahead.attribute.codeType) {
+		case(KW_if):
+			selection_statement();
+			break;
+
+		case(KW_for || KW_when):
+			iteration_statement();
 			break;
 		}
 	default:
@@ -382,7 +432,8 @@ void statements() {
 void statementsPrime() {
 	switch (lookahead.code) {
 	case MNID_T:
-		if (strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) {
+		if ((strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) ||
+			(strncmp(lookahead.attribute.idLexeme, LANG_READ, 6) == 0)) {
 			statements();
 			break;
 		}
@@ -409,14 +460,67 @@ void statement() {
 		}
 		break;
 	case MNID_T:
-		if (strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) {
-			outputStatement();
+		if ((strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) ||
+			(strncmp(lookahead.attribute.idLexeme, LANG_READ, 6) == 0)) {
+			opt_code_statements();
 		}
 		break;
 	default:
 		printError();
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Statement parsed");
+}
+
+void selection_statement() {
+	matchToken(KEY_T, KW_if);
+	matchToken(LPR_T, NO_ATTR);
+	conditional_expression();
+	matchToken(RPR_T, NO_ATTR);
+	matchToken(LBR_T, NO_ATTR);
+	opt_code_statements();
+	matchToken(RBR_T, NO_ATTR);
+	while (lookahead.attribute.codeType != KW_else) {
+		if (lookahead.attribute.codeType == KW_elseif) {
+			matchToken(KEY_T, KW_elseif);
+			matchToken(LPR_T, NO_ATTR);
+			conditional_expression();
+			matchToken(RPR_T, NO_ATTR);
+			matchToken(LBR_T, NO_ATTR);
+			decision_maker();
+			matchToken(RBR_T, NO_ATTR);
+		}
+	}
+	if (lookahead.attribute.codeType == KW_else) {
+		matchToken(KEY_T, KW_else);
+		matchToken(LBR_T, NO_ATTR);
+		decision_maker();
+		matchToken(RBR_T, NO_ATTR);
+	}
+}
+
+void iteration_statment() {
+	switch (lookahead.attribute.codeType) {
+	case(KW_for):
+		matchToken(KEY_T, KW_for);
+		matchToken(LPR_T, NO_ATTR);
+		relational_expression();
+		matchToken(RPR_T, NO_ATTR);
+		matchToken(LBR_T, NO_ATTR);
+		decision_maker();
+		matchToken(RBR_T, NO_ATTR);
+		break;
+	case(KW_when):
+		matchToken(KEY_T, KW_when);
+		matchToken(LPR_T, NO_ATTR);
+		conditional_expression();
+		matchToken(RPR_T, NO_ATTR);
+		matchToken(LBR_T, NO_ATTR);
+		decision_maker();
+		matchToken(RBR_T, NO_ATTR);
+		break;
+	}
+	
+
 }
 
 /*
@@ -426,10 +530,10 @@ void statement() {
  * FIRST(<output statement>) = { MNID_T(print&) }
  ***********************************************************
  */
-void outputStatement() {
+void output_statement() {
 	matchToken(MNID_T, NO_ATTR);
 	matchToken(LPR_T, NO_ATTR);
-	outputVariableList();
+	opt_variable_list();
 	matchToken(RPR_T, NO_ATTR);
 	matchToken(EOS_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Output statement parsed");
@@ -442,7 +546,7 @@ void outputStatement() {
  * FIRST(<opt_variable_list>) = { IVID_T, FVID_T, SVID_T, ϵ }
  ***********************************************************
  */
-void outputVariableList() {
+void opt_variable_list() {
 	switch (lookahead.code) {
 	case CHN_T:
 		matchToken(CHN_T, NO_ATTR);

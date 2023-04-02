@@ -610,7 +610,7 @@ void printToken(Token t) {
 		printf("RBR_T\n");
 		break;
 	case KEY_T:
-		printf("KW_T\t\t%s\n", keywordTable[t.attribute.codeType]);
+		printf("KEY_T\t\t%s\n", keywordTable[t.attribute.codeType]);
 		break;
 	case COM_T:
 		printf("COM_T\n");

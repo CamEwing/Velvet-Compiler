@@ -64,8 +64,8 @@ extern char* keywordTable[];
 entero syntaxErrorNumber = 0;
 
 #define STR_LANGNAME	"Velvet"
-#define LANG_WRTE		"print"
-#define LANG_READ		"input"
+#define LANG_WRTE		"_print"
+#define LANG_READ		"_input"
 #define LANG_MAIN		"_main"
 
 /* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
@@ -101,17 +101,7 @@ void printError();
 
 /* TO_DO: Place ALL non-terminal function declarations */
 void program();
-void opt_data_declarations();
-void varlist_declarations();
-void varlist_declarationPrime();
-void varlist_declaration();
-void entero_varlist_declaration();
-void decimal_varlist_declaration();
-void chain_varlist_declaration();
-
-void entero_variable();
-void decimal_variable();
-void chain_variable();
+void variable_declaration();
 
 void opt_code_statements();
 void statements();
