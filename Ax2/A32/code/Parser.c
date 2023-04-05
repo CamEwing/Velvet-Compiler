@@ -72,6 +72,7 @@ void startParser() {
  /* TO_DO: This is the main code for match - check your definition */
 void matchToken(entero tokenCode, entero tokenAttribute) {
 	entero matchFlag = 1;
+	
 	switch (lookahead.code) {
 	case KEY_T:
 		if (lookahead.attribute.codeType != tokenAttribute)
@@ -80,10 +81,14 @@ void matchToken(entero tokenCode, entero tokenAttribute) {
 		if (lookahead.code != tokenCode)
 			matchFlag = 0;
 	}
-	if (matchFlag && lookahead.code == SEOF_T)
+	if (matchFlag && lookahead.code == SEOF_T) {
 		return;
+	}
 	if (matchFlag) {
 		lookahead = tokenizer();
+		while (lookahead.code == COM_T) {
+			lookahead = tokenizer();
+		}
 		if (lookahead.code == ERR_T) {
 			printError();
 			lookahead = tokenizer();
@@ -93,6 +98,8 @@ void matchToken(entero tokenCode, entero tokenAttribute) {
 	else {
 		syncErrorHandler(tokenCode);
 	}
+
+
 }
 
 /*
@@ -223,31 +230,25 @@ void printError() {
  ************************************************************
  * Program statement
  * BNF: <program> -> main& { <opt_statements> }
- * FIRST(<program>)= {MNID_T (main&)}.
- ***********************************************************
+ * FIRST(<program>)= {MNID_T (main&)}
+ ************************************************************
  */
 void program() {
+	while (lookahead.code == COM_T) {
+		lookahead = tokenizer();
+	}
 	switch (lookahead.code) {
-	//case COM_T:			//Can't run comments, tf?
-	//	matchToken(COM_T, NO_ATTR);
-	//	break;
+
 	case MNID_T:
-		printf("You got here, good job!");
 		if (strncmp(lookahead.attribute.idLexeme, LANG_MAIN, 5) == 0) {
 			matchToken(MNID_T, NO_ATTR);
 			matchToken(LPR_T, NO_ATTR);
 			matchToken(RPR_T, NO_ATTR);
 			matchToken(LBR_T, NO_ATTR);
-
+			
 			decision_maker();
 
-
 			matchToken(RBR_T, NO_ATTR);
-			//matchToken(MNID_T, NO_ATTR);
-			//matchToken(LBR_T, NO_ATTR);
-			//dataSession();
-			//codeSession();
-			//matchToken(RBR_T, NO_ATTR);
 			break;
 		}
 		else {
@@ -307,11 +308,10 @@ void variable_declaration() {
 			switch (lookahead.code) {
 			case(EQ_T):
 				matchToken(EQ_T, NO_ATTR);
-				matchToken(ENL_T, NO_ATTR);
+				arithmetic_expression();
 				matchToken(EOS_T, NO_ATTR);
 				printf("%s: Initializing Entero\n", STR_LANGNAME);
 				break;
-
 			case(EOS_T):
 				matchToken(EOS_T, NO_ATTR);
 				printf("%s: Declaring Entero\n", STR_LANGNAME);
@@ -324,7 +324,7 @@ void variable_declaration() {
 			switch (lookahead.code) {
 			case(EQ_T):
 				matchToken(EQ_T, NO_ATTR);
-				matchToken(DECI_T, NO_ATTR);
+				arithmetic_expression();
 				matchToken(EOS_T, NO_ATTR);
 				printf("%s: Initializing Decimal\n", STR_LANGNAME);
 				break;
@@ -355,6 +355,77 @@ void variable_declaration() {
 		}
 	default:
 		; // Empty
+	}
+}
+
+void arithmetic_expression() {
+	if (lookahead.code == ENL_T) {
+		matchToken(ENL_T, NO_ATTR);
+		arithmetic_expressions();
+	}
+	if (lookahead.code == DECI_T) {
+		matchToken(DECI_T, NO_ATTR);
+		arithmetic_expressions();
+	}
+	if (lookahead.attribute.arithmeticOperator) {
+		unary_arithmetic_expression();
+	}
+}
+
+void unary_arithmetic_expression() {
+	switch (lookahead.attribute.arithmeticOperator) {
+	case OP_ADD:
+		matchToken(ART_OP_T, NO_ATTR);
+		primary_arithmetic_expression();
+		break;
+	case OP_SUB:
+		matchToken(ART_OP_T, NO_ATTR);
+		primary_arithmetic_expression();
+		break;
+	}
+}
+
+void arithmetic_expressions() {
+	switch (lookahead.attribute.arithmeticOperator) {
+	case OP_ADD:
+		matchToken(ART_OP_T, NO_ATTR);
+		primary_arithmetic_expression();
+		printf("%s%s\n", STR_LANGNAME, ": Arithmetic expression parsed");
+		break;
+	case OP_SUB:
+		matchToken(ART_OP_T, NO_ATTR);
+		primary_arithmetic_expression();
+		printf("%s%s\n", STR_LANGNAME, ": Arithmetic expression parsed");
+		break;
+	case OP_DIV:
+		matchToken(ART_OP_T, NO_ATTR);
+		primary_arithmetic_expression();
+		printf("%s%s\n", STR_LANGNAME, ": Arithmetic expression parsed");
+		break;
+	case OP_MUL:
+		matchToken(ART_OP_T, NO_ATTR);
+		primary_arithmetic_expression();
+		printf("%s%s\n", STR_LANGNAME, ": Arithmetic expression parsed");
+		break;
+	default:
+		;
+	}
+}
+
+void primary_arithmetic_expression() {
+	switch (lookahead.code) {
+	case ENID_T: //Numeric Variable
+		matchToken(ENID_T, NO_ATTR);
+		break;
+	case DECI_T: //Decimal number
+		matchToken(DECI_T, NO_ATTR);
+		break;
+	case ENL_T: //Entero number
+		matchToken(ENL_T, NO_ATTR);
+		break;
+	default:
+		arithmetic_expression();
+		break;
 	}
 }
 
@@ -396,15 +467,17 @@ void opt_code_statements() {
 		case(KW_if):
 			selection_statement();
 			break;
-
-		case(KW_for || KW_when):
+		case(KW_for):
+			iteration_statement();
+			break;
+		case(KW_when):
 			iteration_statement();
 			break;
 		}
 	default:
 		; // Empty
 	}
-	printf("%s%s\n", STR_LANGNAME, ": Optional statements parsed");
+	//printf("%s%s\n", STR_LANGNAME, ": Optional statements parsed");
 }
 
 /*
@@ -417,8 +490,8 @@ void opt_code_statements() {
  */
 void statements() {
 	statement();
-	statementsPrime();
-	printf("%s%s\n", STR_LANGNAME, ": Statements parsed");
+	//statementsPrime();
+	//printf("%s%s\n", STR_LANGNAME, ": Statements parsed");
 }
 
 /*
@@ -460,15 +533,42 @@ void statement() {
 		}
 		break;
 	case MNID_T:
-		if ((strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) ||
-			(strncmp(lookahead.attribute.idLexeme, LANG_READ, 6) == 0)) {
-			opt_code_statements();
+		if ((strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) || (strncmp(lookahead.attribute.idLexeme, LANG_READ, 6) == 0)) {
+			if (strncmp(lookahead.attribute.idLexeme, LANG_WRTE, 6) == 0) {
+				printf("%s%s\n", STR_LANGNAME, ": Print statement parsed");
+			}
+			else {
+				printf("%s%s\n", STR_LANGNAME, ": Input statement parsed");
+			}
+			matchToken(MNID_T, NO_ATTR);
+			matchToken(LPR_T, NO_ATTR);
+			switch (lookahead.code) {
+			case ENID_T: //Numeric Variable
+				matchToken(ENID_T, NO_ATTR);
+				break;
+			case DECI_T: //Decimal number
+				matchToken(DECI_T, NO_ATTR);
+				break;
+			case ENL_T: //Entero number
+				matchToken(ENL_T, NO_ATTR);
+				break;
+			case CNID_T: //chain variable
+				matchToken(CNID_T, NO_ATTR);
+				break;
+			case CHN_T:	//chain value
+				matchToken(CHN_T, NO_ATTR);
+				break;
+			}
+			matchToken(RPR_T, NO_ATTR);
+			matchToken(EOS_T, NO_ATTR);
 		}
+	
+		opt_code_statements();
 		break;
 	default:
 		printError();
 	}
-	printf("%s%s\n", STR_LANGNAME, ": Statement parsed");
+//	printf("%s%s\n", STR_LANGNAME, ": Statement parsed");
 }
 
 void selection_statement() {
@@ -498,7 +598,7 @@ void selection_statement() {
 	}
 }
 
-void iteration_statment() {
+void iteration_statement() {
 	switch (lookahead.attribute.codeType) {
 	case(KW_for):
 		matchToken(KEY_T, KW_for);
@@ -521,6 +621,125 @@ void iteration_statment() {
 	}
 	
 
+}
+
+void conditional_expression() {
+	relational_expression();
+	switch (lookahead.attribute.codeType) {
+	case(KW_OR):
+		logical_OR_expression();
+		
+		break;
+	case(KW_AND):
+		logical_AND_expression();
+		break;
+	}
+	
+}
+
+void logical_OR_expression() {
+	matchToken(KEY_T, KW_OR);
+	relational_expression();
+	printf("%s%s\n", STR_LANGNAME, ": Logical OR expression parsed");
+}
+
+void logical_AND_expression() {
+	matchToken(KEY_T, KW_AND);
+	relational_expression();
+	printf("%s%s\n", STR_LANGNAME, ": Logical AND expression parsed");
+}
+
+void relational_expression() {
+	switch (lookahead.code) {
+	case ENID_T: //Numeric Variable
+		matchToken(ENID_T, NO_ATTR);
+		relational_a_expression();
+		break;
+	case DECI_T: //Decimal number
+		matchToken(DECI_T, NO_ATTR);
+		relational_a_expression();
+		break;
+	case ENL_T: //Entero number
+		matchToken(ENL_T, NO_ATTR);
+		relational_a_expression();
+		break;
+	case CNID_T: //chain variable
+		matchToken(CNID_T, NO_ATTR);
+		relational_s_expression();
+		break;
+	case CHN_T:	//chain value
+		matchToken(CHN_T, NO_ATTR);
+		relational_s_expression();
+		break;
+	}
+
+
+}
+
+void relational_a_expression() {
+	switch (lookahead.attribute.relationalOperator) {
+	case OP_EQ:
+		matchToken(REL_OP_T, NO_ATTR);
+		primary_a_relational_expressions();
+		printf("%s%s\n", STR_LANGNAME, ": Relational arithmetic expression parsed");
+		break;
+	case OP_GT: 
+		matchToken(REL_OP_T, NO_ATTR);
+		primary_a_relational_expressions();
+		printf("%s%s\n", STR_LANGNAME, ": Relational arithmetic expression parsed");
+		break;
+	case OP_LT:
+		matchToken(REL_OP_T, NO_ATTR);
+		primary_a_relational_expressions();
+		printf("%s%s\n", STR_LANGNAME, ": Relational arithmetic expression parsed");
+		break;
+	}
+}
+
+void relational_s_expression() {
+	switch (lookahead.attribute.relationalOperator) {
+	case OP_EQ:
+		matchToken(REL_OP_T, NO_ATTR);
+		primary_s_relational_expressions();
+		printf("%s%s\n", STR_LANGNAME, ": Relational chain expression parsed");
+		break;
+	case OP_GT:
+		matchToken(REL_OP_T, NO_ATTR);
+		primary_s_relational_expressions();
+		printf("%s%s\n", STR_LANGNAME, ": Relational chain expression parsed");
+		break;
+	case OP_LT:
+		matchToken(REL_OP_T, NO_ATTR);
+		primary_s_relational_expressions();
+		printf("%s%s\n", STR_LANGNAME, ": Relational chain expression parsed");
+		break;
+	}
+}
+
+
+void primary_a_relational_expressions() {
+	switch (lookahead.code) {
+	case ENID_T: //Numeric Variable
+		matchToken(ENID_T, NO_ATTR);
+		break;
+	case DECI_T: //Decimal number
+		matchToken(DECI_T, NO_ATTR);
+		break;
+	case ENL_T: //Entero number
+		matchToken(ENL_T, NO_ATTR);
+		break;
+	}
+}
+
+void primary_s_relational_expressions() {
+	switch (lookahead.code) {
+	case CNID_T: //chain variable
+		matchToken(CNID_T, NO_ATTR);
+		break;
+	case CHN_T:	//chain value
+		matchToken(CHN_T, NO_ATTR);
+		break;
+	}
 }
 
 /*

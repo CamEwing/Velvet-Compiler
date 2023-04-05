@@ -102,7 +102,7 @@ void printError();
 /* TO_DO: Place ALL non-terminal function declarations */
 void program();
 void variable_declaration();
-
+void decision_maker();
 void opt_code_statements();
 void statements();
 void statementsPrime();
@@ -118,6 +118,7 @@ void variable_identifies();
 void output_statement();
 void opt_variable_list();
 void arithmetic_expression();
+void arithmetic_expressions();
 void unary_arithmetic_expression();
 void arithmetic_expressions_ADD_SUB();
 void arithmetic_expressions_MUL_DIV();
@@ -129,8 +130,8 @@ void logical_OR_expression();
 void relational_expression();
 void relational_a_expression();
 void relational_s_expression();
-void primary_a_relational_expression();
-void primary_s_relational_expression();
+void primary_a_relational_expressions();
+void primary_s_relational_expressions();
 
 //void codeSession();
 //void dataSession();

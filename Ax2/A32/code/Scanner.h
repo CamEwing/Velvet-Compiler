@@ -294,8 +294,8 @@ static char* keywordTable[KWT_SIZE] = {
 	"true",
 	"false",
 	"send",
-	"print",
-	"input",
+	"_print",
+	"_input",
 	"when",
 	"AND",
 	"OR"
