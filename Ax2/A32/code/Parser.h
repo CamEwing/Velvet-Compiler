@@ -119,6 +119,7 @@ void output_statement();
 void opt_variable_list();
 void arithmetic_expression();
 void arithmetic_expressions();
+void concatenation_expression();
 void unary_arithmetic_expression();
 void arithmetic_expressions_ADD_SUB();
 void arithmetic_expressions_MUL_DIV();

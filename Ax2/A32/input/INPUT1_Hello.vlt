@@ -1,5 +1,5 @@
-// Velvet Example 2: the program is "lexically" correct and should not generate any errors
+// Velvet Example 1: the program is "lexically" correct and should not generate any errors
 
 _main() {
-	print("Hello world");
+	_print("Hello world");
 }

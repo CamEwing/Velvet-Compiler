@@ -234,6 +234,7 @@ void printError() {
  ************************************************************
  */
 void program() {
+	printf("%s%s\n", STR_LANGNAME, ": Parsing the source file...");
 	while (lookahead.code == COM_T) {
 		lookahead = tokenizer();
 	}
@@ -261,6 +262,7 @@ void program() {
 	default:
 		printError();
 	}
+	printf("%s%s\n", STR_LANGNAME, ": Main function parsed");
 	printf("%s%s\n", STR_LANGNAME, ": Program parsed");
 }
 
@@ -308,7 +310,6 @@ void variable_declaration() {
 			switch (lookahead.code) {
 			case(EQ_T):
 				matchToken(EQ_T, NO_ATTR);
-
 				arithmetic_expression();
 				matchToken(EOS_T, NO_ATTR);
 				printf("%s: Initializing Entero\n", STR_LANGNAME);
@@ -341,9 +342,39 @@ void variable_declaration() {
 			switch (lookahead.code) {
 			case(EQ_T):
 				matchToken(EQ_T, NO_ATTR);
-				matchToken(CHN_T, NO_ATTR);
+				if (lookahead.code == CHN_T) {
+					matchToken(CHN_T, NO_ATTR);
+					if (lookahead.code == ART_OP_T && lookahead.attribute.arithmeticOperator == OP_ADD) {
+						matchToken(ART_OP_T, NO_ATTR);
+						if (lookahead.code == CHN_T) {
+							matchToken(CHN_T, NO_ATTR);
+							printf("%s: Concatenation of Chains\n", STR_LANGNAME);
+						}
+						if (lookahead.code == CNID_T) {
+							matchToken(CNID_T, NO_ATTR);
+							printf("%s: Concatenation of Chains\n", STR_LANGNAME);
+						}
+					}
+				}
+				else if (lookahead.code == CNID_T) {
+					matchToken(CNID_T, NO_ATTR);
+					if (lookahead.code == ART_OP_T && lookahead.attribute.arithmeticOperator == OP_ADD) {
+						matchToken(ART_OP_T, NO_ATTR);
+						if (lookahead.code == CHN_T) {
+							matchToken(CHN_T, NO_ATTR);
+							printf("%s: Concatenation of Chains\n", STR_LANGNAME);
+						}
+						if (lookahead.code == CNID_T) {
+							matchToken(CNID_T, NO_ATTR);
+							printf("%s: Concatenation of Chains\n", STR_LANGNAME);
+						}
+					}
+				}
+				else {
+					printf("%s: Initializing Chain\n", STR_LANGNAME);
+				}
 				matchToken(EOS_T, NO_ATTR);
-				printf("%s: Initializing Chain\n", STR_LANGNAME);
+				
 				break;
 			case(EOS_T):
 				matchToken(EOS_T, NO_ATTR);
@@ -360,30 +391,31 @@ void variable_declaration() {
 }
 
 void arithmetic_expression() {
-	if (lookahead.code == ENL_T) {
+	switch (lookahead.code) {
+	case(ENL_T):
 		matchToken(ENL_T, NO_ATTR);
 		if (lookahead.code != EOS_T) {
 			arithmetic_expressions();
 		}
-		
-	}
-	if (lookahead.code == DECI_T) {
+		break;
+	case(DECI_T):
 		matchToken(DECI_T, NO_ATTR);
 		if (lookahead.code != EOS_T) {
 			arithmetic_expressions();
 		}
-	}
-	if (lookahead.code == ENID_T) {
+		break;
+	case(ENID_T):
 		matchToken(ENID_T, NO_ATTR);
 		if (lookahead.code != EOS_T) {
 			arithmetic_expressions();
 		}
-	}
-	if (lookahead.attribute.arithmeticOperator) {
+		break;
+	case(ART_OP_T):
 		unary_arithmetic_expression();
 		if (lookahead.code != EOS_T) {
 			arithmetic_expressions();
 		}
+		break;
 	}
 }
 
@@ -438,11 +470,13 @@ void primary_arithmetic_expression() {
 	case ENL_T: //Entero number
 		matchToken(ENL_T, NO_ATTR);
 		break;
+
 	default:
 		arithmetic_expression();
 		break;
 	}
 }
+
 
 /*
  ************************************************************
@@ -592,7 +626,7 @@ void selection_statement() {
 	conditional_expression();
 	matchToken(RPR_T, NO_ATTR);
 	matchToken(LBR_T, NO_ATTR);
-	opt_code_statements();
+	decision_maker();
 	matchToken(RBR_T, NO_ATTR);
 	while (lookahead.attribute.codeType != KW_else) {
 		if (lookahead.attribute.codeType == KW_elseif) {

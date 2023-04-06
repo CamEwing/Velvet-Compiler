@@ -1,19 +1,18 @@
-# Julius Example 4:
-  Testing numbers (ex: factorial) #
-main& {
-    data {
-        int i$, n$, f$;
-    }
-    code {
-        f$=1;
-        i$=1;
-        print&('Write a number:');
-        input&(n$);
-        while (i$<n$) do {
-            f$ = f$ * i$;
-            i$ = i$ + 1;
-        };
-        print&('Factorial:');
-        print&(f$);
-    }
+// Velvet - Example 3: volume of a spheretesting numbers (ex: factorial)
+// Helo
+
+
+_main() {
+	ent #i = 1;
+	ent #f = 1;
+	ent #n;
+// You're cute
+        _print("Write a number");
+        _input(#n);
+        when(#i < #n){
+            #f = #f * #i;
+            #i = #i + 1;
+	}
+	_print("Factorial");
+	_print(#f);
 }

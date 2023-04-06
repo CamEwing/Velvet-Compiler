@@ -1,13 +1,10 @@
-// Velvet - Example 3: volume of a sphere
+// Velvet - Example 2: volume of a sphere
 
-main() {
-	data {
-		real PI%, r%, Vol%;
-	}
-	code {
-		PI% = 3.14;
-		input&(r%);
-		Vol% = 4.0 / 3.0 * PI% * (r% * r% * r%);
-		print&(Vol%);
-	}
+_main() {
+	decimal #PI = 3.14;
+	decimal #r;
+	decimal #vol;
+	input(#r);
+	#vol = 4.0 / 3.0 * #PI * (#r * #r * #r);
+	print(#vol);
 }
