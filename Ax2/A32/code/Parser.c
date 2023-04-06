@@ -37,7 +37,7 @@
 ************************************************************
 */
 
-/* TO_DO: Adjust the function header */
+/* Adjust the function header */
 
 #ifndef COMPILERS_H_
 #include "Compilers.h"
@@ -52,7 +52,7 @@
  * Process Parser
  ***********************************************************
  */
- /* TO_DO: This is the function to start the parser - check your program definition */
+ /* This is the function to start the parser - check your program definition */
 
 void startParser() {
 	lookahead = tokenizer();
@@ -69,7 +69,7 @@ void startParser() {
  * Match Token
  ***********************************************************
  */
- /* TO_DO: This is the main code for match - check your definition */
+ /* This is the main code for match - check your definition */
 void matchToken(entero tokenCode, entero tokenAttribute) {
 	entero matchFlag = 1;
 	
@@ -107,7 +107,7 @@ void matchToken(entero tokenCode, entero tokenAttribute) {
  * Syncronize Error Handler
  ***********************************************************
  */
- /* TO_DO: This is the function to handler error - adjust basically datatypes */
+ /* This is the function to handler error - adjust basically datatypes */
 void syncErrorHandler(entero syncTokenCode) {
 	printError();
 	syntaxErrorNumber++;
@@ -125,20 +125,18 @@ void syncErrorHandler(entero syncTokenCode) {
  * Print Error
  ***********************************************************
  */
- /* TO_DO: This is the function to error printing - adjust basically datatypes */
+ /* This is the function to error printing - adjust basically datatypes */
 void printError() {
 	Token t = lookahead;
 	printf("%s%s%3d\n", STR_LANGNAME, ": Syntax error:  Line:", line);
 	printf("*****  Token code:%3d Attribute: ", t.code);
 	switch (t.code) {
 	case RTE_T:
-		//numScannerErrors++;
 		printf("RTE_T\t\t%s\n", t.attribute.errLexeme);
 		break;
 	case ERR_T:
 		numScannerErrors++;
 		printf("*ERROR*\t\t%s\n", t.attribute.errLexeme);
-		/* Update numScannerErrors */
 		break;
 	case SEOF_T:
 		printf("SEOF_T\t\t%d\t\n", t.attribute.seofType);
@@ -277,21 +275,6 @@ void decision_maker() {
 
 	}
 }
-
-/*
- ************************************************************
- * dataSession
- * BNF: <dataSession> -> data { <opt_varlist_declarations> }
- * FIRST(<program>)= {KEY_T (KW_data)}.
- ***********************************************************
- */
-//void dataSession() {
-//	matchToken(KEY_T, KW_data);
-//	matchToken(LBR_T, NO_ATTR);
-//	optVarListDeclarations();
-//	matchToken(RBR_T, NO_ATTR);
-//	printf("%s%s\n", STR_LANGNAME, ": Data Session parsed");
-//}
 
 /*
  ************************************************************
@@ -477,24 +460,6 @@ void primary_arithmetic_expression() {
 	}
 }
 
-
-/*
- ************************************************************
- * codeSession statement
- * BNF: <codeSession> -> code { <opt_statements> }
- * FIRST(<codeSession>)= {KEY_T (KW_code)}.
- ***********************************************************
- */
-//void codeSession() {
-//	matchToken(KEY_T, KW_code);
-//	matchToken(LBR_T, NO_ATTR);
-//	optionalStatements();
-//	matchToken(RBR_T, NO_ATTR);
-//	printf("%s%s\n", STR_LANGNAME, ": Code Session parsed");
-//}
-
-/* TO_DO: Continue the development (all non-terminal functions) */
-
 /*
  ************************************************************
  * Optional statement
@@ -526,7 +491,6 @@ void opt_code_statements() {
 	default:
 		; // Empty
 	}
-	//printf("%s%s\n", STR_LANGNAME, ": Optional statements parsed");
 }
 
 /*
@@ -539,8 +503,6 @@ void opt_code_statements() {
  */
 void statements() {
 	statement();
-	//statementsPrime();
-	//printf("%s%s\n", STR_LANGNAME, ": Statements parsed");
 }
 
 /*
@@ -617,7 +579,6 @@ void statement() {
 	default:
 		printError();
 	}
-//	printf("%s%s\n", STR_LANGNAME, ": Statement parsed");
 }
 
 void selection_statement() {

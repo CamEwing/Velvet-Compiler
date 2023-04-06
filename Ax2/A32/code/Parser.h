@@ -68,13 +68,10 @@ entero syntaxErrorNumber = 0;
 #define LANG_READ		"_input"
 #define LANG_MAIN		"_main"
 
-/* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
+/* Create ALL constants for keywords (sequence given in table.h) */
 
 /* Constants */
 enum KEYWORDS {
-	//KW_data,
-	//KW_code,
-
 	NO_ATTR = -1,
 	KW_ent,
 	KW_decimal,
@@ -99,7 +96,7 @@ void matchToken(entero, entero);
 void syncErrorHandler(entero);
 void printError();
 
-/* TO_DO: Place ALL non-terminal function declarations */
+/* Place ALL non-terminal function declarations */
 void program();
 void variable_declaration();
 void decision_maker();
@@ -107,24 +104,14 @@ void opt_code_statements();
 void statements();
 void statementsPrime();
 void statement();
-void assignment_statement();
-
-void assignment_expression();
 void selection_statement();
 void iteration_statement();
-void input_statement();
-void variable_list();
-void variable_identifies();
 void output_statement();
 void opt_variable_list();
 void arithmetic_expression();
 void arithmetic_expressions();
-void concatenation_expression();
 void unary_arithmetic_expression();
-void arithmetic_expressions_ADD_SUB();
-void arithmetic_expressions_MUL_DIV();
 void primary_arithmetic_expression();
-void chain_expression();
 void conditional_expression();
 void logical_AND_expression();
 void logical_OR_expression();
@@ -133,16 +120,5 @@ void relational_a_expression();
 void relational_s_expression();
 void primary_a_relational_expressions();
 void primary_s_relational_expressions();
-
-//void codeSession();
-//void dataSession();
-//void optVarListDeclarations();
-//void optionalStatements();
-//void outputStatement();
-//void outputVariableList();
-//void program();
-//void statement();
-//void statements();
-//void statementsPrime();
 
 #endif
