@@ -308,6 +308,7 @@ void variable_declaration() {
 			switch (lookahead.code) {
 			case(EQ_T):
 				matchToken(EQ_T, NO_ATTR);
+
 				arithmetic_expression();
 				matchToken(EOS_T, NO_ATTR);
 				printf("%s: Initializing Entero\n", STR_LANGNAME);
@@ -361,14 +362,28 @@ void variable_declaration() {
 void arithmetic_expression() {
 	if (lookahead.code == ENL_T) {
 		matchToken(ENL_T, NO_ATTR);
-		arithmetic_expressions();
+		if (lookahead.code != EOS_T) {
+			arithmetic_expressions();
+		}
+		
 	}
 	if (lookahead.code == DECI_T) {
 		matchToken(DECI_T, NO_ATTR);
-		arithmetic_expressions();
+		if (lookahead.code != EOS_T) {
+			arithmetic_expressions();
+		}
+	}
+	if (lookahead.code == ENID_T) {
+		matchToken(ENID_T, NO_ATTR);
+		if (lookahead.code != EOS_T) {
+			arithmetic_expressions();
+		}
 	}
 	if (lookahead.attribute.arithmeticOperator) {
 		unary_arithmetic_expression();
+		if (lookahead.code != EOS_T) {
+			arithmetic_expressions();
+		}
 	}
 }
 
